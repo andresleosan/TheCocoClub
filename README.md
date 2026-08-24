@@ -5,6 +5,7 @@ Official web application for **The Coco Club** (Saint Helier, Jersey), featuring
 - **Interactive Multi-Step Appointment Booking Engine**: Real-time service selection, add-on customization, interactive calendar with slot availability, WhatsApp pre-filled confirmation link, and downloadable `.ics` calendar invitation.
 - **Studio Administration Portal**: Live metrics, appointment management with 1-click status updates, walk-in/phone manual booking creator, CSV export, and client preferences.
 - **Social Proof & Reviews Engine**: Interactive 5.0 Google Reviews showcase with filters, helpful voting, live review submission modal, and floating live social proof ticker.
+- **Interactive Treatment Quiz & Gift Voucher Studio**: Personalized recommendation engine and bespoke gift cards.
 - **Interactive Before & After Transformation Slider**: High-precision visual comparisons for BIAB, medical podology, and sculpted acrylics.
 
 ---
@@ -20,22 +21,17 @@ Official web application for **The Coco Club** (Saint Helier, Jersey), featuring
 
 ## 🚀 Getting Started
 
-1. Navigate to the project directory:
-   ```bash
-   cd DevTheCocoClub
-   ```
-
-2. Install dependencies with `pnpm`:
+1. Install dependencies with `pnpm`:
    ```bash
    corepack pnpm install
    ```
 
-3. Start the local development server:
+2. Start the local development server:
    ```bash
    corepack pnpm run dev
    ```
 
-4. Build for production:
+3. Build for production:
    ```bash
    corepack pnpm run build
    ```
