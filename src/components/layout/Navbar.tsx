@@ -37,39 +37,43 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header
       className={`sticky top-0 z-30 transition-all duration-300 ${
         isScrolled
-          ? 'bg-lace/95 backdrop-blur-md shadow-sm border-b border-oyster-200/80 py-3'
-          : 'bg-transparent py-5'
+          ? 'bg-lace/95 backdrop-blur-md shadow-sm border-b border-oyster-200/80 py-2.5'
+          : 'bg-transparent py-4'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between">
-          {/* Brand Logo */}
-          <a href="#" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-full bg-jacobean flex items-center justify-center text-lace shadow-md transition-transform duration-300 group-hover:scale-105">
-              <svg className="w-5 h-5 text-gold-400" viewBox="0 0 100 100" fill="currentColor">
+        <div className="flex items-center justify-between gap-4">
+          
+          {/* Brand Logo & Emblem */}
+          <a href="#" className="flex items-center gap-3 shrink-0 group">
+            {/* Signature Capsule Heart Mark */}
+            <div className="w-9 h-11 sm:w-10 sm:h-12 rounded-full bg-jacobean flex items-center justify-center text-lace shadow-md transition-transform duration-300 group-hover:scale-105 border border-white/10 shrink-0">
+              <svg className="w-4 h-4 text-gold-300 fill-current" viewBox="0 0 100 100">
                 <path d="M50 78 C35 65, 20 48, 20 34 C20 22, 30 14, 42 16 C48 17, 50 22, 50 22 C50 22, 52 17, 58 16 C70 14, 80 22, 80 34 C80 48, 65 65, 50 78 Z" />
               </svg>
             </div>
+
+            {/* Brand Typography */}
             <div className="flex flex-col">
-              <div className="flex items-center gap-1.5">
-                <span className="font-display text-2xl sm:text-3xl font-normal tracking-wider text-jacobean group-hover:text-redRobin transition-colors leading-none uppercase">
+              <div className="flex items-center gap-1.5 whitespace-nowrap">
+                <span className="font-display text-2xl sm:text-3xl font-normal tracking-[0.14em] text-jacobean group-hover:text-redRobin transition-colors leading-none uppercase">
                   THE COCO CLUB
                 </span>
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-redRobin animate-pulse"></span>
+                <span className="w-1.5 h-1.5 rounded-full bg-redRobin shrink-0"></span>
               </div>
-              <span className="text-[9px] uppercase tracking-widest-luxury text-khaki-700 font-bold mt-1">
+              <span className="text-[9px] uppercase tracking-[0.25em] text-khaki-700 font-bold mt-1 whitespace-nowrap">
                 Saint Helier • Jersey
               </span>
             </div>
           </a>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-8">
+          {/* Desktop Navigation Links */}
+          <nav className="hidden lg:flex items-center gap-5 xl:gap-7">
             {navLinks.map((link) => (
               <a
                 key={link.name}
                 href={link.href}
-                className="text-xs uppercase tracking-widest font-semibold text-jacobean/80 hover:text-redRobin transition-colors relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1.5px] after:bg-redRobin hover:after:w-full after:transition-all after:duration-200"
+                className="text-[11px] xl:text-xs uppercase tracking-[0.18em] font-semibold text-jacobean/80 hover:text-redRobin transition-colors whitespace-nowrap py-1 relative after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1.5px] after:bg-redRobin hover:after:w-full after:transition-all after:duration-200"
               >
                 {link.name}
               </a>
@@ -77,14 +81,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Action CTAs */}
-          <div className="hidden sm:flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-2.5 shrink-0">
             {/* Admin Management Toggle */}
             <button
               onClick={onOpenAdmin}
-              className="inline-flex items-center gap-1.5 px-3 py-2 text-xs uppercase tracking-wider font-bold rounded-full border border-oyster-300 bg-oyster-100/60 hover:bg-oyster-200 text-jacobean/90 transition-all hover:shadow-xs"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-[11px] uppercase tracking-wider font-bold rounded-full border border-oyster-300 bg-white/80 hover:bg-white text-jacobean/85 transition-all shadow-2xs hover:shadow-xs whitespace-nowrap"
               title="Studio Portal (Manage Bookings & Schedules)"
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-khaki-600" />
+              <ShieldCheck className="w-3.5 h-3.5 text-khaki-600 shrink-0" />
               <span>Studio Portal</span>
               {bookingCount > 0 && (
                 <span className="px-1.5 py-0.2 text-[10px] font-bold bg-khaki text-white rounded-full">
@@ -96,10 +100,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Book Now Button */}
             <button
               onClick={onOpenBooking}
-              className="relative group overflow-hidden rounded-full bg-jacobean px-6 py-2.5 text-xs uppercase tracking-wider font-bold text-lace shadow-md transition-all duration-300 hover:bg-redRobin hover:shadow-lg hover:shadow-redRobin/20 active:scale-98"
+              className="relative group overflow-hidden rounded-full bg-jacobean hover:bg-redRobin px-5 xl:px-6 py-2.5 text-[11px] xl:text-xs uppercase tracking-wider font-bold text-lace shadow-md transition-all duration-300 hover:shadow-lg hover:shadow-redRobin/20 active:scale-98 whitespace-nowrap"
             >
               <span className="relative z-10 flex items-center gap-2">
-                <Calendar className="w-3.5 h-3.5 text-gold-400 group-hover:rotate-12 transition-transform duration-300" />
+                <Calendar className="w-3.5 h-3.5 text-gold-400 group-hover:rotate-12 transition-transform duration-300 shrink-0" />
                 <span>Book Appointment</span>
               </span>
             </button>
@@ -109,7 +113,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="flex sm:hidden items-center gap-2">
             <button
               onClick={onOpenBooking}
-              className="px-3.5 py-1.5 text-xs uppercase tracking-wider font-bold rounded-full bg-jacobean text-lace"
+              className="px-3 py-1.5 text-[10px] uppercase tracking-wider font-bold rounded-full bg-jacobean text-lace whitespace-nowrap"
             >
               Book
             </button>
@@ -121,6 +125,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
+
         </div>
       </div>
 
@@ -133,7 +138,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 key={link.name}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="block text-sm uppercase tracking-wider font-bold text-jacobean hover:text-redRobin py-2 border-b border-oyster-100"
+                className="block text-xs uppercase tracking-[0.18em] font-bold text-jacobean hover:text-redRobin py-2 border-b border-oyster-100"
               >
                 {link.name}
               </a>
