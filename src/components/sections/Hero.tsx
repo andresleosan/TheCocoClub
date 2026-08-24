@@ -30,7 +30,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
               title="Click to view client reviews"
             >
               <span className="w-2 h-2 rounded-full bg-redRobin animate-ping" />
-              <span className="text-xs font-semibold uppercase tracking-widest text-jacobean-700">
+              <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-widest-luxury text-jacobean-700">
                 Saint Helier’s Private Atelier
               </span>
               <span className="text-oyster-400">•</span>
@@ -38,22 +38,24 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
                 {[1, 2, 3, 4, 5].map((_, i) => (
                   <Star key={i} className="w-3 h-3 fill-current" />
                 ))}
-                <span className="ml-1.5 font-bold text-jacobean group-hover:text-redRobin transition-colors">5.0</span>
-                <span className="text-jacobean/60 ml-0.5">(Google Reviews)</span>
+                <span className="ml-1.5 font-bold text-jacobean group-hover:text-redRobin transition-colors font-sans">5.0</span>
+                <span className="text-jacobean/60 ml-0.5 font-sans">(Google)</span>
               </div>
             </button>
 
             {/* Main Headline */}
-            <div className="space-y-4">
-              <p className="font-serif italic text-2xl sm:text-3xl text-redRobin font-medium tracking-wide">
+            <div className="space-y-3">
+              <p className="font-signature text-3xl sm:text-5xl text-redRobin font-normal leading-none tracking-normal">
                 The Art of Taking Care
               </p>
-              <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-bold text-jacobean tracking-tight leading-[1.08]">
+              <h1 className="font-display text-5xl sm:text-7xl lg:text-8xl font-normal text-jacobean tracking-tight leading-[0.92] uppercase">
                 Bespoke Nail Artistry <br />
-                <span className="font-normal italic text-khaki-700">& Clinical Podology</span>
+                <span className="font-bodySerif italic font-normal text-khaki-700 lowercase text-4xl sm:text-6xl lg:text-7xl tracking-normal block mt-1">
+                  & clinical podology
+                </span>
               </h1>
-              <p className="text-base sm:text-lg text-jacobean/80 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed pt-2">
-                Created by <strong>Deoana Moreno</strong>, master nail technician and podology specialist with over <strong>30 years of experience</strong>. A tranquil private studio where medical-grade precision meets Latin warmth and uncompromising luxury.
+              <p className="text-sm sm:text-base text-jacobean/80 max-w-2xl mx-auto lg:mx-0 font-normal leading-relaxed pt-3">
+                Created by <strong>Deoana Moreno</strong>, master nail technician and podology specialist with over <strong>30 years of international experience</strong>. A tranquil private sanctuary in Saint Helier where surgical precision meets Latin warmth and uncompromising luxury.
               </p>
             </div>
 
@@ -94,9 +96,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
               <button
                 onClick={onOpenBooking}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-jacobean hover:bg-redRobin text-lace font-semibold shadow-lg hover:shadow-redRobin/25 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 text-base"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-jacobean hover:bg-redRobin text-lace font-bold uppercase tracking-wider text-xs shadow-lg hover:shadow-redRobin/25 transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0"
               >
-                <Calendar className="w-5 h-5 text-gold-400" />
+                <Calendar className="w-4 h-4 text-gold-400" />
                 <span>Book Private Appointment</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
@@ -105,9 +107,9 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
                 href={createWhatsAppGeneralInquiryLink()}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-full bg-white/90 hover:bg-white border border-oyster-300 text-jacobean font-medium shadow-xs hover:shadow-md transition-all duration-300 text-base group"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-full bg-white/90 hover:bg-white border border-oyster-300 text-jacobean font-bold uppercase tracking-wider text-xs shadow-xs hover:shadow-md transition-all duration-300 group"
               >
-                <MessageCircle className="w-5 h-5 text-emerald-600 group-hover:scale-110 transition-transform" />
+                <MessageCircle className="w-4 h-4 text-emerald-600 group-hover:scale-110 transition-transform" />
                 <span>Chat on WhatsApp</span>
               </a>
             </div>
@@ -115,20 +117,20 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
             {/* Trust Badges */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-6 border-t border-oyster-200/80">
               <div className="text-center lg:text-left">
-                <p className="font-serif text-2xl sm:text-3xl font-bold text-jacobean">30+</p>
-                <p className="text-xs text-jacobean/70 uppercase tracking-wider font-medium">Years Mastery</p>
+                <p className="font-display text-3xl sm:text-4xl font-normal text-jacobean">30+</p>
+                <p className="text-[10px] text-jacobean/70 uppercase tracking-widest font-bold">Years Mastery</p>
               </div>
               <div className="text-center lg:text-left">
-                <p className="font-serif text-2xl sm:text-3xl font-bold text-khaki-700">1-on-1</p>
-                <p className="text-xs text-jacobean/70 uppercase tracking-wider font-medium">Private Sanctuary</p>
+                <p className="font-display text-3xl sm:text-4xl font-normal text-khaki-700">1-on-1</p>
+                <p className="text-[10px] text-jacobean/70 uppercase tracking-widest font-bold">Private Sanctuary</p>
               </div>
               <div className="text-center lg:text-left">
-                <p className="font-serif text-2xl sm:text-3xl font-bold text-redRobin">100%</p>
-                <p className="text-xs text-jacobean/70 uppercase tracking-wider font-medium">Hospital Sterility</p>
+                <p className="font-display text-3xl sm:text-4xl font-normal text-redRobin">100%</p>
+                <p className="text-[10px] text-jacobean/70 uppercase tracking-widest font-bold">Hospital Sterility</p>
               </div>
               <div className="text-center lg:text-left">
-                <p className="font-serif text-2xl sm:text-3xl font-bold text-amber-600">5.0 ★</p>
-                <p className="text-xs text-jacobean/70 uppercase tracking-wider font-medium">Google Rating</p>
+                <p className="font-display text-3xl sm:text-4xl font-normal text-amber-600">5.0 ★</p>
+                <p className="text-[10px] text-jacobean/70 uppercase tracking-widest font-bold">Google Rating</p>
               </div>
             </div>
 
@@ -151,16 +153,16 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
                   {/* Overlay Bottom Content */}
                   <div className="absolute bottom-0 inset-x-0 p-6 text-lace space-y-2">
                     <div className="flex items-center gap-2">
-                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-gold text-jacobean uppercase tracking-wider">
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-gold text-jacobean uppercase tracking-widest">
                         Master Craft
                       </span>
                       <span className="text-xs text-lace/80 font-light">Russian BIAB & Extensions</span>
                     </div>
-                    <p className="font-serif text-xl sm:text-2xl font-bold text-lace">
+                    <p className="font-bodySerif italic text-xl sm:text-2xl text-lace">
                       “Every appointment is your personal moment to relax.”
                     </p>
-                    <p className="text-xs text-oyster-200 italic">
-                      — Deoana Moreno, Founder
+                    <p className="font-signature text-2xl text-gold-300">
+                      Deoana Moreno
                     </p>
                   </div>
                 </div>
@@ -172,7 +174,7 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
                   <ShieldCheck className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-jacobean">Clinical Podology</p>
+                  <p className="text-xs font-bold uppercase tracking-wider text-jacobean">Clinical Podology</p>
                   <p className="text-[11px] text-jacobean/60">30+ Yrs Medical Foot Care</p>
                 </div>
               </div>
@@ -183,8 +185,8 @@ export const Hero: React.FC<HeroProps> = ({ onOpenBooking }) => {
                   <Heart className="w-5 h-5 fill-current" />
                 </div>
                 <div>
-                  <p className="font-serif text-sm font-bold tracking-wide">Expert Hands</p>
-                  <p className="text-[11px] text-gold-300 italic">Latin Heart • Tailored to You</p>
+                  <p className="font-display text-sm uppercase tracking-wider font-normal">Expert Hands</p>
+                  <p className="font-signature text-xl text-gold-300">Latin Heart • Tailored to You</p>
                 </div>
               </div>
 

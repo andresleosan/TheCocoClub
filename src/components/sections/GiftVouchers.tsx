@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Gift, Sparkles, MessageCircle, Heart, Check, Copy } from 'lucide-react';
+import { Gift, MessageCircle, Heart } from 'lucide-react';
 import { STUDIO_INFO } from '../../data/studioInfo';
 
 export const GiftVouchers: React.FC = () => {
@@ -24,15 +24,15 @@ export const GiftVouchers: React.FC = () => {
         
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-redRobin-50 border border-redRobin-200 text-redRobin-900 text-xs font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-redRobin-50 border border-redRobin-200 text-redRobin-900 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest-luxury">
             <Gift className="w-3.5 h-3.5 text-redRobin" />
             <span>The Gift of Pampering</span>
           </div>
 
-          <h2 className="font-serif text-3xl sm:text-5xl font-bold text-jacobean tracking-tight">
+          <h2 className="font-display text-4xl sm:text-6xl font-normal text-jacobean tracking-tight uppercase leading-tight">
             The Coco Club Gift Vouchers
           </h2>
-          <p className="text-xs sm:text-sm text-jacobean/70 leading-relaxed">
+          <p className="text-sm sm:text-base text-jacobean/70 leading-relaxed">
             Treat someone special to an unhurried, private 1-on-1 beauty or podology experience at 14 La Motte Street.
           </p>
         </div>
@@ -42,13 +42,13 @@ export const GiftVouchers: React.FC = () => {
           
           {/* Left Column: Voucher Customizer Form */}
           <div className="lg:col-span-6 bg-white p-6 sm:p-8 rounded-3xl border border-oyster-200 shadow-sm space-y-6">
-            <h3 className="font-serif text-xl font-bold text-jacobean border-b border-oyster-100 pb-3">
+            <h3 className="font-display text-2xl font-bold text-jacobean border-b border-oyster-100 pb-3 uppercase tracking-wide">
               Personalise Your Voucher
             </h3>
 
             {/* Amount Selection */}
             <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-jacobean">
+              <label className="text-[10px] font-bold uppercase tracking-wider text-jacobean">
                 Select Voucher Value (£ GBP)
               </label>
               <div className="grid grid-cols-4 gap-2">
@@ -75,7 +75,7 @@ export const GiftVouchers: React.FC = () => {
             {/* Recipient & Sender */}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1">
-                <label className="text-xs font-bold text-jacobean">Recipient Name</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-jacobean">Recipient Name</label>
                 <input
                   type="text"
                   value={recipient}
@@ -85,7 +85,7 @@ export const GiftVouchers: React.FC = () => {
                 />
               </div>
               <div className="space-y-1">
-                <label className="text-xs font-bold text-jacobean">From (Your Name)</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-jacobean">From (Your Name)</label>
                 <input
                   type="text"
                   value={sender}
@@ -98,19 +98,19 @@ export const GiftVouchers: React.FC = () => {
 
             {/* Message */}
             <div className="space-y-1">
-              <label className="text-xs font-bold text-jacobean">Personal Note / Message</label>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-jacobean">Personal Note / Message</label>
               <textarea
                 rows={2}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Write your personal greeting..."
-                className="w-full px-3.5 py-2 rounded-xl border border-oyster-300 text-xs focus:outline-none focus:ring-2 focus:ring-redRobin/20"
+                className="w-full px-3.5 py-2 rounded-xl border border-oyster-300 text-xs focus:outline-none focus:ring-2 focus:ring-redRobin/20 font-bodySerif italic"
               />
             </div>
 
             <button
               onClick={handleWhatsAppVoucher}
-              className="w-full py-3.5 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold shadow-md transition-colors flex items-center justify-center gap-2"
+              className="w-full py-3.5 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold uppercase tracking-wider shadow-md transition-colors flex items-center justify-center gap-2"
             >
               <MessageCircle className="w-4 h-4" />
               <span>Order Voucher via WhatsApp (£{finalAmount})</span>
@@ -132,16 +132,16 @@ export const GiftVouchers: React.FC = () => {
                     <Heart className="w-4 h-4 text-lace fill-current" />
                   </div>
                   <div>
-                    <span className="font-serif text-lg font-bold tracking-tight">
+                    <span className="font-display text-xl font-bold tracking-wider uppercase">
                       THE COCO CLUB
                     </span>
-                    <p className="text-[10px] text-gold-300 uppercase tracking-widest">
+                    <p className="text-[10px] text-gold-300 uppercase tracking-widest font-sans">
                       Privilege Gift Card
                     </p>
                   </div>
                 </div>
 
-                <span className="font-serif text-3xl font-bold text-gold-300">
+                <span className="font-display text-4xl font-bold text-gold-300">
                   £{finalAmount}
                 </span>
               </div>
@@ -149,11 +149,11 @@ export const GiftVouchers: React.FC = () => {
               {/* Card Body */}
               <div className="space-y-4 relative z-10">
                 <div className="space-y-1">
-                  <p className="text-[10px] uppercase font-bold text-oyster-400">Presented To</p>
-                  <p className="font-serif text-2xl font-bold text-lace">{recipient || 'Valued Guest'}</p>
+                  <p className="text-[10px] uppercase font-bold tracking-widest text-oyster-400">Presented To</p>
+                  <p className="font-signature text-3xl sm:text-4xl text-lace leading-none">{recipient || 'Valued Guest'}</p>
                 </div>
 
-                <div className="bg-white/5 backdrop-blur-xs p-3.5 rounded-2xl border border-white/10 text-xs italic text-oyster-200">
+                <div className="bg-white/5 backdrop-blur-xs p-3.5 rounded-2xl border border-white/10 text-xs text-oyster-200 font-bodySerif italic">
                   “{message || 'With love, for your private pampering session.'}”
                 </div>
 
@@ -164,7 +164,7 @@ export const GiftVouchers: React.FC = () => {
               </div>
 
               {/* Card Footer */}
-              <div className="pt-4 border-t border-white/15 flex items-center justify-between text-[10px] text-oyster-400 relative z-10">
+              <div className="pt-4 border-t border-white/15 flex items-center justify-between text-[10px] text-oyster-400 relative z-10 uppercase tracking-wider">
                 <span>14 La Motte St, Saint Helier, Jersey</span>
                 <span>Valid for all treatments</span>
               </div>

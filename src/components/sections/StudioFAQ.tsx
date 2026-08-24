@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { HelpCircle, ChevronDown, ChevronUp, Sparkles, ShieldCheck } from 'lucide-react';
+import { HelpCircle, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface FAQItem {
   question: string;
@@ -53,15 +53,15 @@ export const StudioFAQ: React.FC = () => {
         
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-khaki-100/80 border border-khaki-300 text-khaki-800 text-xs font-bold uppercase tracking-wider">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-khaki-100/80 border border-khaki-300 text-khaki-800 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest-luxury">
             <HelpCircle className="w-3.5 h-3.5 text-khaki-700" />
             <span>Studio Etiquette & Advice</span>
           </div>
 
-          <h2 className="font-serif text-3xl sm:text-5xl font-bold text-jacobean tracking-tight">
+          <h2 className="font-display text-4xl sm:text-6xl font-normal text-jacobean tracking-tight uppercase leading-tight">
             Frequently Asked Questions
           </h2>
-          <p className="text-xs sm:text-sm text-jacobean/70 leading-relaxed">
+          <p className="text-sm sm:text-base text-jacobean/70 leading-relaxed">
             Everything you need to know about our treatments, hygiene standards, and private studio appointments.
           </p>
         </div>
@@ -85,10 +85,10 @@ export const StudioFAQ: React.FC = () => {
                   aria-expanded={isOpen}
                 >
                   <div className="space-y-1">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-khaki-700">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-khaki-700">
                       {faq.category}
                     </span>
-                    <h3 className="font-serif text-base sm:text-lg font-bold text-jacobean leading-snug">
+                    <h3 className="font-display text-lg sm:text-xl font-bold text-jacobean leading-snug">
                       {faq.question}
                     </h3>
                   </div>
@@ -110,10 +110,10 @@ export const StudioFAQ: React.FC = () => {
 
         {/* Bottom Help Box */}
         <div className="mt-12 p-6 rounded-2xl bg-pearlBush/50 border border-oyster-300 text-center space-y-2">
-          <p className="font-serif text-base font-bold text-jacobean">
+          <p className="font-display text-xl font-bold text-jacobean uppercase">
             Have a specific concern or custom bridal inquiry?
           </p>
-          <p className="text-xs text-jacobean/70">
+          <p className="text-xs sm:text-sm text-jacobean/70">
             Deoana is happy to answer your questions personally via WhatsApp or phone.
           </p>
         </div>

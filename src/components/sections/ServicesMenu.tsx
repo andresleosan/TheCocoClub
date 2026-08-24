@@ -22,13 +22,13 @@ export const ServicesMenu: React.FC<ServicesMenuProps> = ({ onSelectService }) =
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-14 space-y-3">
-          <span className="text-xs font-bold uppercase tracking-[0.25em] text-khaki-700">
+          <span className="text-[11px] font-bold uppercase tracking-widest-luxury text-khaki-700">
             Bespoke Treatment Menu & Pricing
           </span>
-          <h2 className="font-serif text-3xl sm:text-5xl font-bold text-jacobean tracking-tight">
+          <h2 className="font-display text-4xl sm:text-6xl font-normal text-jacobean tracking-tight uppercase leading-tight">
             Curated Rituals for Hands & Feet
           </h2>
-          <p className="text-base sm:text-lg text-jacobean/75 font-normal leading-relaxed">
+          <p className="text-sm sm:text-base text-jacobean/75 font-normal leading-relaxed">
             All prices in GBP (£). Every session is a tailored 1-on-1 private appointment with complimentary beverages and medical-grade sterilization.
           </p>
         </div>
@@ -41,7 +41,7 @@ export const ServicesMenu: React.FC<ServicesMenuProps> = ({ onSelectService }) =
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all duration-200 ${
+                className={`px-5 py-2.5 rounded-full text-xs uppercase tracking-wider font-bold whitespace-nowrap transition-all duration-200 ${
                   isActive
                     ? 'bg-jacobean text-lace shadow-md scale-102'
                     : 'bg-white/80 text-jacobean/80 hover:bg-white hover:text-jacobean border border-oyster-200'
@@ -77,7 +77,7 @@ export const ServicesMenu: React.FC<ServicesMenuProps> = ({ onSelectService }) =
                   {/* Badge */}
                   {service.badge && (
                     <div className="absolute top-3 left-3">
-                      <span className="px-3 py-1 rounded-full text-[11px] font-bold bg-jacobean/90 text-lace backdrop-blur-xs border border-white/20 shadow-xs">
+                      <span className="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-jacobean/90 text-lace backdrop-blur-xs border border-white/20 shadow-xs">
                         {service.badge}
                       </span>
                     </div>
@@ -85,7 +85,7 @@ export const ServicesMenu: React.FC<ServicesMenuProps> = ({ onSelectService }) =
 
                   {/* Price Tag Pill */}
                   <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-xs px-3.5 py-1.5 rounded-2xl shadow-md border border-oyster-200">
-                    <span className="font-serif text-xl font-bold text-jacobean">
+                    <span className="font-display text-2xl font-bold text-jacobean">
                       {formatPrice(service.price)}
                     </span>
                   </div>
@@ -107,7 +107,7 @@ export const ServicesMenu: React.FC<ServicesMenuProps> = ({ onSelectService }) =
                       </div>
                     </div>
 
-                    <h3 className="font-serif text-xl font-bold text-jacobean leading-snug">
+                    <h3 className="font-display text-xl sm:text-2xl font-bold text-jacobean leading-snug tracking-tight uppercase">
                       {service.name}
                     </h3>
                   </div>
@@ -118,7 +118,7 @@ export const ServicesMenu: React.FC<ServicesMenuProps> = ({ onSelectService }) =
 
                   {/* What's Included bullets */}
                   <div className="space-y-1.5 pt-2 border-t border-oyster-100">
-                    <p className="text-[11px] font-bold uppercase tracking-wider text-jacobean/60">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-jacobean/60">
                       Included in treatment:
                     </p>
                     {service.included.slice(0, 3).map((inc, i) => (
@@ -135,7 +135,7 @@ export const ServicesMenu: React.FC<ServicesMenuProps> = ({ onSelectService }) =
               <div className="p-6 pt-0 space-y-2">
                 <button
                   onClick={() => onSelectService(service)}
-                  className="w-full py-3 rounded-2xl bg-jacobean hover:bg-redRobin text-lace text-sm font-semibold flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98"
+                  className="w-full py-3 rounded-2xl bg-jacobean hover:bg-redRobin text-lace text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-xs transition-all active:scale-98"
                 >
                   <span>Book This Ritual</span>
                   <ArrowRight className="w-4 h-4" />
@@ -166,14 +166,14 @@ export const ServicesMenu: React.FC<ServicesMenuProps> = ({ onSelectService }) =
             </button>
 
             <div className="space-y-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-redRobin">
+              <span className="text-[10px] font-bold uppercase tracking-widest-luxury text-redRobin">
                 Treatment Overview
               </span>
-              <h3 className="font-serif text-2xl font-bold text-jacobean">
+              <h3 className="font-display text-2xl sm:text-3xl font-bold text-jacobean uppercase">
                 {activeDetailModal.name}
               </h3>
               <div className="flex items-center gap-4 text-sm text-jacobean/80 pt-1">
-                <span className="font-serif text-xl font-bold text-redRobin">
+                <span className="font-display text-2xl font-bold text-redRobin">
                   {formatPrice(activeDetailModal.price)}
                 </span>
                 <span>•</span>
@@ -182,7 +182,7 @@ export const ServicesMenu: React.FC<ServicesMenuProps> = ({ onSelectService }) =
                   {formatDuration(activeDetailModal.durationMinutes)}
                 </span>
                 <span>•</span>
-                <span className="flex items-center gap-1 text-amber-600 font-bold">
+                <span className="flex items-center gap-1 text-amber-600 font-bold text-xs">
                   <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
                   5.0 Rating
                 </span>
@@ -214,7 +214,7 @@ export const ServicesMenu: React.FC<ServicesMenuProps> = ({ onSelectService }) =
                   setActiveDetailModal(null);
                   onSelectService(s);
                 }}
-                className="w-full py-3 rounded-2xl bg-jacobean hover:bg-redRobin text-lace font-semibold text-sm transition-colors shadow-md flex items-center justify-center gap-2"
+                className="w-full py-3 rounded-2xl bg-jacobean hover:bg-redRobin text-lace font-bold text-xs uppercase tracking-wider transition-colors shadow-md flex items-center justify-center gap-2"
               >
                 <span>Select & Choose Date</span>
                 <ArrowRight className="w-4 h-4" />

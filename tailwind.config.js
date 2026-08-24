@@ -83,9 +83,16 @@ export default {
         }
       },
       fontFamily: {
-        serif: ['"Cormorant Garamond"', '"Playfair Display"', 'Georgia', 'serif'],
-        sans: ['"Syne"', '"Plus Jakarta Sans"', 'sans-serif'],
-        script: ['"Playfair Display"', 'italic', 'serif'],
+        display: ['"Italiana"', '"Bodoni Moda"', 'Georgia', 'serif'],
+        serif: ['"Bodoni Moda"', '"Libre Baskerville"', 'Georgia', 'serif'],
+        bodySerif: ['"Libre Baskerville"', 'Georgia', 'serif'],
+        signature: ['"Pinyon Script"', 'cursive'],
+        sans: ['"Plus Jakarta Sans"', '"Syne"', 'sans-serif'],
+        syne: ['"Syne"', '"Plus Jakarta Sans"', 'sans-serif'],
+      },
+      letterSpacing: {
+        'widest-luxury': '0.3em',
+        'wider-luxury': '0.2em',
       },
       animation: {
         'float-slow': 'float 6s ease-in-out infinite',
