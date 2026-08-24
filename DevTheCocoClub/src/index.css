@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-khaki: #737F51;
+    --color-red-robin: #8C3B2B;
+    --color-jacobean: #2C1810;
+    --color-oyster: #D7CEBE;
+    --color-lace: #FAF7F2;
+    --color-pearl-bush: #EBE3D5;
+    --color-gold: #C5A059;
+  }
+
+  body {
+    @apply bg-lace text-jacobean antialiased selection:bg-khaki-200 selection:text-jacobean;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Custom luxury scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #F4ECE0;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #C2B5A0;
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #737F51;
+  }
+}
+
+@layer utilities {
+  .text-gold-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#A6823F] via-[#C5A059] to-[#81632D];
+  }
+
+  .text-lacquer-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-jacobean via-redRobin to-jacobean;
+  }
+
+  .glass-card {
+    @apply bg-white/75 backdrop-blur-md border border-oyster-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)];
+  }
+
+  .glass-dark {
+    @apply bg-jacobean/90 backdrop-blur-md border border-white/10 shadow-2xl;
+  }
+
+  .bg-radial-glow {
+    background: radial-gradient(circle at center, rgba(115, 127, 81, 0.12) 0%, rgba(250, 247, 242, 0) 70%);
+  }
+
+  .bg-terracotta-glow {
+    background: radial-gradient(circle at center, rgba(140, 59, 43, 0.10) 0%, rgba(250, 247, 242, 0) 70%);
+  }
+
+  .pattern-wave {
+    background-image: radial-gradient(#D7CEBE 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+}
