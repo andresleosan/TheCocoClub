@@ -5,10 +5,13 @@ import { FluidBackground } from './components/layout/FluidBackground';
 import { Hero } from './components/sections/Hero';
 import { AboutDeoana } from './components/sections/AboutDeoana';
 import { ServicesMenu } from './components/sections/ServicesMenu';
+import { TreatmentQuiz } from './components/sections/TreatmentQuiz';
 import { ClinicalPodology } from './components/sections/ClinicalPodology';
 import { TransformationSlider } from './components/sections/TransformationSlider';
 import { ExperienceGallery } from './components/sections/ExperienceGallery';
+import { GiftVouchers } from './components/sections/GiftVouchers';
 import { Testimonials } from './components/sections/Testimonials';
+import { StudioFAQ } from './components/sections/StudioFAQ';
 import { LocationContact } from './components/sections/LocationContact';
 import { Footer } from './components/layout/Footer';
 import { BookingModal } from './components/booking/BookingModal';
@@ -66,7 +69,7 @@ export const App: React.FC = () => {
       {/* Background Animated Fluid Accents */}
       <FluidBackground />
 
-      {/* Top Announcement Bar */}
+      {/* Top Announcement Bar with Live Jersey Time */}
       <AnnouncementBar />
 
       {/* Floating Haute Navbar */}
@@ -78,23 +81,28 @@ export const App: React.FC = () => {
 
       {/* Main Content Sections */}
       <main className="flex-1">
-        {/* Hero Section with Prominent 5.0 Google Badge & Social Proof */}
+        {/* 1. Hero Section with Prominent 5.0 Google Badge & Social Proof */}
         <Hero
           onOpenBooking={handleOpenGenericBooking}
           onExploreServices={handleExploreServices}
         />
 
-        {/* Philosophy & Meet Deoana Moreno (30+ Years Experience) */}
+        {/* 2. Philosophy & Meet Deoana Moreno (30+ Years Experience) */}
         <AboutDeoana
           onOpenBooking={handleOpenGenericBooking}
         />
 
-        {/* Treatment Menu & Pricing with Ratings (£ GBP) */}
+        {/* 3. Treatment Menu & Pricing with Ratings (£ GBP) */}
         <ServicesMenu
           onSelectService={handleOpenBookingWithService}
         />
 
-        {/* Clinical Podology & Medical Foot Health Spotlight */}
+        {/* 4. Interactive Treatment Matcher Consultation Quiz */}
+        <TreatmentQuiz
+          onSelectRecommendedService={handleOpenBookingWithService}
+        />
+
+        {/* 5. Clinical Podology & Medical Foot Health Spotlight */}
         <ClinicalPodology
           onBookPodology={() => {
             const podoService = SERVICES_DATA.find(s => s.id === 'srv-medical-podology') || SERVICES_DATA[0];
@@ -102,20 +110,26 @@ export const App: React.FC = () => {
           }}
         />
 
-        {/* Interactive Before & After Transformation Slider */}
+        {/* 6. Interactive Before & After Transformation Slider */}
         <TransformationSlider />
 
-        {/* Visual Lookbook & Curated Showcase */}
+        {/* 7. Visual Lookbook & Curated Showcase */}
         <ExperienceGallery />
 
-        {/* Client Reviews & 5.0 Google Reviews Wall Showcase */}
+        {/* 8. Luxury Gift Voucher Experience */}
+        <GiftVouchers />
+
+        {/* 9. Client Reviews & 5.0 Google Reviews Wall Showcase */}
         <Testimonials
           testimonials={testimonials}
           onAddReview={handleAddReview}
           onBookTreatment={handleOpenGenericBooking}
         />
 
-        {/* Location (14 La Motte St, St Helier) & Hours */}
+        {/* 10. Frequently Asked Questions & Studio Etiquette */}
+        <StudioFAQ />
+
+        {/* 11. Location (14 La Motte St, St Helier) & Hours */}
         <LocationContact />
       </main>
 
