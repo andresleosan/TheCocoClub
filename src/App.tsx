@@ -1,171 +1,108 @@
-import React, { useState, useEffect } from 'react';
-import { AnnouncementBar } from './components/layout/AnnouncementBar';
-import { Navbar } from './components/layout/Navbar';
-import { FluidBackground } from './components/layout/FluidBackground';
-import { Hero } from './components/sections/Hero';
-import { AboutDeoana } from './components/sections/AboutDeoana';
-import { ServicesMenu } from './components/sections/ServicesMenu';
-import { TreatmentQuiz } from './components/sections/TreatmentQuiz';
-import { ClinicalPodology } from './components/sections/ClinicalPodology';
-import { TransformationSlider } from './components/sections/TransformationSlider';
-import { ExperienceGallery } from './components/sections/ExperienceGallery';
-import { GiftVouchers } from './components/sections/GiftVouchers';
-import { Testimonials } from './components/sections/Testimonials';
-import { StudioFAQ } from './components/sections/StudioFAQ';
-import { LocationContact } from './components/sections/LocationContact';
-import { Footer } from './components/layout/Footer';
-import { BookingModal } from './components/booking/BookingModal';
-import { AdminModal } from './components/admin/AdminModal';
-import { FloatingReviewTicker } from './components/reviews/FloatingReviewTicker';
-import { Toast } from './components/ui/Toast';
-import { Booking, ServiceItem, Testimonial } from './types';
-import { getStoredBookings, getStoredTestimonials, addStoredTestimonial } from './utils/storage';
-import { SERVICES_DATA } from './data/services';
+import React, { useCallback, useEffect, useState } from 'react'
+import { AnnouncementBar } from './components/layout/AnnouncementBar'
+import { Navbar } from './components/layout/Navbar'
+import { Footer } from './components/layout/Footer'
+import { Hero } from './components/sections/Hero'
+import { TheStudio } from './components/sections/TheStudio'
+import { Treatments } from './components/sections/Treatments'
+import { FootHealth } from './components/sections/FootHealth'
+import { TreatmentFinder } from './components/sections/TreatmentFinder'
+import { TheWork } from './components/sections/TheWork'
+import { GiftVouchers } from './components/sections/GiftVouchers'
+import { Visiting } from './components/sections/Visiting'
+import { BookingModal } from './components/booking/BookingModal'
+import { AdminModal } from './components/admin/AdminModal'
+import { Toast } from './components/ui/Toast'
+import { Booking, ServiceItem } from './types'
+import { getStoredBookings } from './utils/storage'
+import { SERVICES_DATA } from './data/services'
 
+/**
+ * Page architecture.
+ *
+ * The previous page ran eleven sections in an identical rhythm — centred eyebrow, centred
+ * 60px uppercase headline, three-card grid — which left it with no hierarchy at all: every
+ * section claimed to be the most important one, so none of them read as important.
+ *
+ * Four things carry this page, and everything else is deliberately quieter:
+ *   1. the founder      -> The Studio
+ *   2. the treatments   -> Treatments
+ *   3. the credential   -> Foot Health, the page's one dark structural anchor
+ *   4. the work         -> The Work
+ *
+ * Backgrounds alternate lace / pearl bush and break once into jacobean, so the page opens
+ * warm, compresses into the dark band, opens again, then tightens toward the practicalities.
+ *
+ * Three sections were removed rather than restyled. The before/after slider, the reviews wall
+ * and the lookbook all presented stock photography and invented clients as the studio's own
+ * work and its own customers; with no real assets behind them they could not be made honest,
+ * so The Work now points at the studio's actual Instagram instead.
+ */
 export const App: React.FC = () => {
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
-  const [preSelectedService, setPreSelectedService] = useState<ServiceItem | null>(null);
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [isBookingOpen, setBookingOpen] = useState(false)
+  const [isAdminOpen, setAdminOpen] = useState(false)
+  const [preSelectedService, setPreSelectedService] = useState<ServiceItem | null>(null)
+  const [bookings, setBookings] = useState<Booking[]>([])
+  const [toast, setToast] = useState<string | null>(null)
 
   useEffect(() => {
-    setBookings(getStoredBookings());
-    setTestimonials(getStoredTestimonials());
-  }, []);
+    setBookings(getStoredBookings())
+  }, [])
 
-  const handleOpenBookingWithService = (service: ServiceItem) => {
-    setPreSelectedService(service);
-    setIsBookingOpen(true);
-  };
+  const openBooking = useCallback((service?: ServiceItem) => {
+    setPreSelectedService(service ?? SERVICES_DATA[0] ?? null)
+    setBookingOpen(true)
+  }, [])
 
-  const handleOpenGenericBooking = () => {
-    setPreSelectedService(SERVICES_DATA[0]);
-    setIsBookingOpen(true);
-  };
-
-  const handleBookingCreated = (newBooking: Booking) => {
-    const updated = getStoredBookings();
-    setBookings(updated);
-    setToastMessage(`✨ Appointment #${newBooking.referenceNumber} booked successfully!`);
-  };
-
-  const handleAddReview = (newReview: Testimonial) => {
-    const updated = addStoredTestimonial(newReview);
-    setTestimonials(updated);
-    setToastMessage(`💖 Thank you for your 5-star review, ${newReview.name}!`);
-  };
-
-  const handleExploreServices = () => {
-    const elem = document.getElementById('services');
-    if (elem) {
-      elem.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  const handleBookingCreated = useCallback((booking: Booking) => {
+    setBookings(getStoredBookings())
+    // Deliberately worded as a request: nothing reaches the studio until the client sends
+    // the WhatsApp message that the confirmation step hands them.
+    setToast(`Request ${booking.referenceNumber} ready — send it to the studio on WhatsApp.`)
+  }, [])
 
   return (
-    <div className="min-h-screen bg-lace text-jacobean relative flex flex-col font-sans selection:bg-khaki-200 selection:text-jacobean">
-      {/* Background Animated Fluid Accents */}
-      <FluidBackground />
+    <div className="flex min-h-screen flex-col overflow-x-clip bg-lace text-jacobean">
+      <a
+        href="#main"
+        className="u-sr-only-focusable absolute left-4 top-4 z-50 rounded-full bg-jacobean px-5 py-3 text-sm font-semibold text-lace"
+      >
+        Skip to content
+      </a>
 
-      {/* Top Announcement Bar with Live Jersey Time */}
       <AnnouncementBar />
+      <Navbar onOpenBooking={() => openBooking()} />
 
-      {/* Floating Haute Navbar */}
-      <Navbar
-        onOpenBooking={handleOpenGenericBooking}
-        onOpenAdmin={() => setIsAdminOpen(true)}
-        bookingCount={bookings.length}
-      />
-
-      {/* Main Content Sections */}
-      <main className="flex-1">
-        {/* 1. Hero Section with Prominent 5.0 Google Badge & Social Proof */}
-        <Hero
-          onOpenBooking={handleOpenGenericBooking}
-          onExploreServices={handleExploreServices}
-        />
-
-        {/* 2. Philosophy & Meet Deoana Moreno (30+ Years Experience) */}
-        <AboutDeoana
-          onOpenBooking={handleOpenGenericBooking}
-        />
-
-        {/* 3. Treatment Menu & Pricing with Ratings (£ GBP) */}
-        <ServicesMenu
-          onSelectService={handleOpenBookingWithService}
-        />
-
-        {/* 4. Interactive Treatment Matcher Consultation Quiz */}
-        <TreatmentQuiz
-          onSelectRecommendedService={handleOpenBookingWithService}
-        />
-
-        {/* 5. Clinical Podology & Medical Foot Health Spotlight */}
-        <ClinicalPodology
-          onBookPodology={() => {
-            const podoService = SERVICES_DATA.find(s => s.id === 'srv-medical-podology') || SERVICES_DATA[0];
-            handleOpenBookingWithService(podoService);
-          }}
-        />
-
-        {/* 6. Interactive Before & After Transformation Slider */}
-        <TransformationSlider />
-
-        {/* 7. Visual Lookbook & Curated Showcase */}
-        <ExperienceGallery />
-
-        {/* 8. Luxury Gift Voucher Experience */}
+      <main id="main" className="flex-1">
+        <Hero onOpenBooking={() => openBooking()} />
+        <TheStudio />
+        <Treatments onSelectService={openBooking} />
+        <FootHealth onOpenBooking={openBooking} />
+        <TreatmentFinder onSelectService={openBooking} />
+        <TheWork />
         <GiftVouchers />
-
-        {/* 9. Client Reviews & 5.0 Google Reviews Wall Showcase */}
-        <Testimonials
-          testimonials={testimonials}
-          onAddReview={handleAddReview}
-          onBookTreatment={handleOpenGenericBooking}
-        />
-
-        {/* 10. Frequently Asked Questions & Studio Etiquette */}
-        <StudioFAQ />
-
-        {/* 11. Location (14 La Motte St, St Helier) & Hours */}
-        <LocationContact />
+        <Visiting />
       </main>
 
-      {/* Footer */}
-      <Footer
-        onOpenBooking={handleOpenGenericBooking}
-        onOpenAdmin={() => setIsAdminOpen(true)}
-      />
+      <Footer onOpenBooking={() => openBooking()} onOpenAdmin={() => setAdminOpen(true)} />
 
-      {/* Interactive Booking Engine Modal */}
       <BookingModal
         isOpen={isBookingOpen}
-        onClose={() => setIsBookingOpen(false)}
+        onClose={() => setBookingOpen(false)}
         preSelectedService={preSelectedService}
         onBookingCreated={handleBookingCreated}
       />
 
-      {/* Studio Administration & Appointment Dashboard */}
       <AdminModal
         isOpen={isAdminOpen}
-        onClose={() => setIsAdminOpen(false)}
+        onClose={() => setAdminOpen(false)}
         bookings={bookings}
         onBookingsChange={setBookings}
       />
 
-      {/* Live Floating Social Proof Ticker (Bottom Left) */}
-      <FloatingReviewTicker />
-
-      {/* Toast Notification */}
-      <Toast
-        message={toastMessage || ''}
-        isOpen={!!toastMessage}
-        onClose={() => setToastMessage(null)}
-      />
+      <Toast message={toast ?? ''} isOpen={Boolean(toast)} onClose={() => setToast(null)} />
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

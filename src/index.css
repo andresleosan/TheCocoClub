@@ -2,69 +2,227 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================================
+   The Coco Club — base layer
+   Palette and type roles live in tailwind.config.js; this file sets the page
+   defaults and the small set of reusable pieces every section shares.
+   ========================================================================= */
+
 @layer base {
   :root {
-    --color-khaki: #737F51;
-    --color-red-robin: #8C3B2B;
-    --color-jacobean: #2C1810;
-    --color-oyster: #D7CEBE;
-    --color-lace: #FAF7F2;
-    --color-pearl-bush: #EBE3D5;
-    --color-gold: #C5A059;
+    --khaki: #85865a;
+    --red-robin: #803a21;
+    --jacobean: #452319;
+    --oyster: #d5c6b1;
+    --lace: #fdf8f2;
+    --pearl-bush: #e9e2d2;
+
+    /* Stacked fixed chrome: announcement bar + navbar. Sections that need to
+       clear it (scroll targets) offset by this instead of guessing. */
+    --chrome-height: 6.5rem;
+  }
+
+  * {
+    scroll-margin-top: var(--chrome-height);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
-    @apply bg-lace text-jacobean antialiased selection:bg-khaki-200 selection:text-jacobean;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    @apply bg-lace text-jacobean font-sans antialiased;
+    /* Syne is a grotesque with a large x-height and tight defaults — it needs more
+       leading than a workhorse UI sans to stay comfortable at paragraph length. */
+    line-height: 1.65;
+    text-rendering: optimizeLegibility;
   }
 
-  /* Custom luxury scrollbar */
+  ::selection {
+    background: var(--khaki);
+    color: var(--lace);
+  }
+
+  /* Italiana ships a single weight. Asking for bold makes the browser smear a
+     synthetic one over these hairlines, which destroys the face. */
+  .font-display {
+    font-weight: 400 !important;
+    font-synthesis-weight: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Every interactive element gets the same visible keyboard ring. */
+  :focus-visible {
+    outline: 2px solid var(--red-robin);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
   }
-
   ::-webkit-scrollbar-track {
-    background: #F4ECE0;
+    background: theme('colors.pearlBush.100');
   }
-
   ::-webkit-scrollbar-thumb {
-    background: #C2B5A0;
+    background: theme('colors.oyster.400');
     border-radius: 9999px;
+    border: 2px solid theme('colors.pearlBush.100');
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: theme('colors.khaki.500');
+  }
+}
+
+@layer components {
+  /* ---- layout -------------------------------------------------------- */
+
+  .u-container {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-6 lg:px-8;
   }
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: #737F51;
+  /* Section rhythm. `u-section` is the default; `u-section-tight` for the
+     short connective sections that shouldn't get a full breath. */
+  .u-section {
+    @apply py-20 sm:py-24 lg:py-32;
+  }
+
+  .u-section-tight {
+    @apply py-14 sm:py-16 lg:py-20;
+  }
+
+  /* ---- type ---------------------------------------------------------- */
+
+  /* Small caps label above a heading. Short strings only — letterspaced
+     uppercase destroys readability past about four words. */
+  .u-eyebrow {
+    @apply font-sans text-[0.6875rem] font-semibold uppercase tracking-eyebrow;
+  }
+
+  /* Deco titling caps (Italiana). Always needs the extra tracking. */
+  .u-title {
+    @apply font-display uppercase tracking-title;
+  }
+
+  /* The brand's secondary voice: Kalice italic -> Fraunces italic. Used for
+     pull quotes, the founder's line, and sub-headlines under a title. */
+  .u-quote {
+    @apply font-serif italic;
+  }
+
+  .u-lede {
+    @apply max-w-prose text-base leading-relaxed text-jacobean/80 sm:text-lg;
+  }
+
+  /* ---- surfaces ------------------------------------------------------ */
+
+  .u-card {
+    @apply rounded-card border border-oyster-300/60 bg-lace shadow-card;
+  }
+
+  .u-card-quiet {
+    @apply rounded-card border border-oyster-300/50 bg-pearlBush/40;
+  }
+
+  .u-panel {
+    @apply rounded-panel border border-oyster-300/60 bg-lace shadow-lift;
+  }
+
+  /* A hairline in the brand's warm neutral rather than a grey border. */
+  .u-rule {
+    @apply border-oyster-300/70;
+  }
+
+  /* ---- controls ------------------------------------------------------ */
+
+  .u-btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-full
+           text-xs font-semibold uppercase tracking-eyebrow
+           transition-[background-color,color,box-shadow,transform] duration-200
+           disabled:pointer-events-none disabled:opacity-50;
+    /* 44px min target on every button, without forcing height on wide CTAs. */
+    min-height: 2.75rem;
+    padding-inline: 1.5rem;
+  }
+
+  /* Primary action. Jacobean gives 13:1 against lace text — the strongest,
+     calmest CTA in the palette. Red Robin is the hover, not the resting state. */
+  .u-btn-primary {
+    @apply u-btn bg-jacobean text-lace shadow-card hover:bg-redRobin hover:shadow-lift
+           active:translate-y-px;
+  }
+
+  /* Secondary action on light grounds. */
+  .u-btn-secondary {
+    @apply u-btn border border-jacobean/25 bg-transparent text-jacobean
+           hover:border-jacobean/50 hover:bg-jacobean/5;
+  }
+
+  /* For use on jacobean / photographic grounds. */
+  .u-btn-inverse {
+    @apply u-btn bg-lace text-jacobean hover:bg-oyster-200;
+  }
+
+  .u-btn-sm {
+    @apply text-[0.6875rem];
+    min-height: 2.25rem;
+    padding-inline: 1rem;
+  }
+
+  /* ---- forms --------------------------------------------------------- */
+
+  .u-label {
+    @apply mb-1.5 block text-xs font-semibold uppercase tracking-eyebrow text-jacobean/70;
+  }
+
+  .u-field {
+    @apply w-full rounded-xl border border-oyster-300 bg-lace px-4 py-3 text-sm text-jacobean
+           placeholder:text-jacobean/70
+           focus:border-khaki-500 focus:outline-none focus:ring-2 focus:ring-khaki-500/25;
+  }
+
+  .u-field-error {
+    @apply border-redRobin-700 focus:border-redRobin-700 focus:ring-redRobin-700/25;
   }
 }
 
 @layer utilities {
-  .text-gold-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#A6823F] via-[#C5A059] to-[#81632D];
+  /* Decorative brand ribbons sit behind content and must never eat pointer events. */
+  .u-decor {
+    @apply pointer-events-none absolute select-none;
   }
 
-  .text-lacquer-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-jacobean via-redRobin to-jacobean;
+  /* Hides content visually but keeps it for screen readers. */
+  .u-sr-only-focusable:not(:focus):not(:focus-within) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
+}
 
-  .glass-card {
-    @apply bg-white/75 backdrop-blur-md border border-oyster-200/80 shadow-[0_8px_30px_rgb(0,0,0,0.04)];
-  }
-
-  .glass-dark {
-    @apply bg-jacobean/90 backdrop-blur-md border border-white/10 shadow-2xl;
-  }
-
-  .bg-radial-glow {
-    background: radial-gradient(circle at center, rgba(115, 127, 81, 0.12) 0%, rgba(250, 247, 242, 0) 70%);
-  }
-
-  .bg-terracotta-glow {
-    background: radial-gradient(circle at center, rgba(140, 59, 43, 0.10) 0%, rgba(250, 247, 242, 0) 70%);
-  }
-
-  .pattern-wave {
-    background-image: radial-gradient(#D7CEBE 1px, transparent 1px);
-    background-size: 24px 24px;
+/* Respect the OS-level motion preference. The drifting ribbons and the review
+   marquee are decorative; nobody should have to sit through them. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

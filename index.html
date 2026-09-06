@@ -1,43 +1,121 @@
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en-GB" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>The Coco Club — Private Nail Studio &amp; Podology, Saint Helier, Jersey</title>
+    <meta
+      name="description"
+      content="A private one-to-one nail studio and podology room on La Motte Street, Saint Helier. BIAB, Russian dry manicure, hand-sculpted extensions and expert foot care with Deoana Moreno. The art of taking care."
+    />
+    <link rel="canonical" href="https://thecococlub.vercel.app/" />
+    <meta name="theme-color" content="#452319" />
+    <meta name="format-detection" content="telephone=yes" />
+
+    <!-- Marks are the studio's own, traced from its brand guide. -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="apple-touch-icon" href="/og-image.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Primary Meta Tags -->
-    <title>The Coco Club | Luxury Nail Studio & Podology Clinic | Saint Helier, Jersey</title>
-    <meta name="title" content="The Coco Club | Luxury Nail Studio & Podology Clinic | Saint Helier, Jersey" />
-    <meta name="description" content="The Coco Club by Deoana Moreno. Exclusive private nail studio & medical podology clinic in Saint Helier, Jersey. 30+ years of craftsmanship, BIAB, acrylic extensions, and clinical foot care." />
-    <meta name="theme-color" content="#2C1810" />
+    <link rel="apple-touch-icon" sizes="512x512" href="/apple-touch-icon.png" />
+    <link rel="mask-icon" href="/brand/logomark.svg" color="#452319" />
 
     <!-- Open Graph / WhatsApp / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:site_name" content="The Coco Club" />
     <meta property="og:url" content="https://thecococlub.vercel.app/" />
-    <meta property="og:title" content="The Coco Club | Luxury Nail Studio & Podology Clinic | Saint Helier, Jersey" />
-    <meta property="og:description" content="The Coco Club by Deoana Moreno. Exclusive private nail studio & medical podology clinic in Saint Helier, Jersey. 30+ years of craftsmanship, BIAB, acrylic extensions, and clinical foot care." />
+    <meta property="og:title" content="The Coco Club — Private Nail Studio &amp; Podology, Saint Helier" />
+    <meta
+      property="og:description"
+      content="The art of taking care. A private studio in Saint Helier for BIAB, Russian dry manicure, sculpted extensions and expert foot care."
+    />
     <meta property="og:image" content="https://thecococlub.vercel.app/og-image.jpg" />
     <meta property="og:image:secure_url" content="https://thecococlub.vercel.app/og-image.jpg" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="675" />
-    <meta property="og:image:alt" content="The Coco Club - Luxury Nail Studio & Podology Clinic in Saint Helier, Jersey" />
-    <meta property="og:site_name" content="The Coco Club" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="The Coco Club — the art of taking care. Saint Helier, Jersey." />
 
-    <!-- Twitter Card -->
+    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://thecococlub.vercel.app/" />
-    <meta name="twitter:title" content="The Coco Club | Luxury Nail Studio & Podology Clinic | Saint Helier, Jersey" />
-    <meta name="twitter:description" content="The Coco Club by Deoana Moreno. Exclusive private nail studio & medical podology clinic in Saint Helier, Jersey. 30+ years of craftsmanship, BIAB, acrylic extensions, and clinical foot care." />
+    <meta name="twitter:title" content="The Coco Club — Private Nail Studio &amp; Podology, Saint Helier" />
+    <meta
+      name="twitter:description"
+      content="The art of taking care. A private studio in Saint Helier for BIAB, Russian dry manicure, sculpted extensions and expert foot care."
+    />
     <meta name="twitter:image" content="https://thecococlub.vercel.app/og-image.jpg" />
 
-    <!-- Google Fonts: Editorial Luxury Typography Hierarchy -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Italiana&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Pinyon+Script&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!--
+      Brand type. The guide names Caroline Regular (titles), Kalice Italic (secondary) and
+      Syne (body); Caroline and Kalice are not web-licensed here, so Italiana and Fraunces
+      italic stand in for them. Syne is the real thing and carries all body copy.
+    -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Italiana&family=Syne:wght@400..800&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Italiana&family=Syne:wght@400..800&display=swap"
+    />
+
+    <!--
+      Local-business structured data. A studio like this lives on local search, so the
+      address, hours and phone are worth stating in machine-readable form.
+      Deliberately no aggregateRating / review markup: the studio's real review data is not
+      in this codebase, and inventing it would be both dishonest and a Google penalty.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "BeautySalon",
+        "@id": "https://thecococlub.vercel.app/#studio",
+        "name": "The Coco Club",
+        "slogan": "The art of taking care",
+        "description": "A private one-to-one nail studio and podology room in Saint Helier, Jersey, led by Deoana Moreno.",
+        "url": "https://thecococlub.vercel.app/",
+        "image": "https://thecococlub.vercel.app/og-image.jpg",
+        "logo": "https://thecococlub.vercel.app/brand/wordmark.svg",
+        "telephone": "+447797917296",
+        "priceRange": "££",
+        "currenciesAccepted": "GBP",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "14 La Motte Street",
+          "addressLocality": "Saint Helier",
+          "addressRegion": "Jersey",
+          "postalCode": "JE2 4SY",
+          "addressCountry": "JE"
+        },
+        "areaServed": { "@type": "AdministrativeArea", "name": "Jersey, Channel Islands" },
+        "founder": { "@type": "Person", "name": "Deoana Moreno" },
+        "sameAs": ["https://instagram.com/thecococlub.je"],
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Tuesday", "Wednesday", "Friday"],
+            "opens": "09:00",
+            "closes": "18:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Thursday",
+            "opens": "09:00",
+            "closes": "19:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": "Saturday",
+            "opens": "09:00",
+            "closes": "17:00"
+          }
+        ]
+      }
+    </script>
   </head>
-  <body class="bg-lace text-jacobean font-sans antialiased selection:bg-khaki-200 selection:text-jacobean min-h-screen">
+  <body class="min-h-screen">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

@@ -1,40 +1,58 @@
-import React from 'react';
-import { LucideIcon } from 'lucide-react';
+import React from 'react'
+import { LucideIcon } from 'lucide-react'
 
-interface StatsCardProps {
-  title: string;
-  value: string | number;
-  subtitle?: string;
-  icon: LucideIcon;
-  colorClass?: string;
+/**
+ * One figure in the studio portal's summary strip.
+ *
+ * The old card accepted a free-form `colorClass`, and the calling code duly filled it with
+ * `bg-amber-100` and `bg-emerald-100` — Tailwind defaults that are not in this brand and paint
+ * nothing like it. The tone is a closed set now, so a stat can only be dressed in the studio's
+ * own colours.
+ *
+ * This is an operator's tool, not a page: the number is set in Syne rather than the display
+ * face, because Italiana falls apart below 20px and this strip gets read all day.
+ */
+
+type StatTone = 'neutral' | 'khaki' | 'jacobean' | 'redRobin'
+
+const TONES: Record<StatTone, string> = {
+  neutral: 'bg-oyster-200 text-jacobean',
+  khaki: 'bg-khaki-100 text-khaki-700',
+  jacobean: 'bg-jacobean text-lace',
+  redRobin: 'bg-redRobin-100 text-redRobin-800',
+}
+
+export interface StatsCardProps {
+  label: string
+  value: string | number
+  /** Where the number comes from. State the source, never what it implies. */
+  detail?: string
+  icon: LucideIcon
+  tone?: StatTone
 }
 
 export const StatsCard: React.FC<StatsCardProps> = ({
-  title,
+  label,
   value,
-  subtitle,
+  detail,
   icon: Icon,
-  colorClass = 'bg-khaki-100 text-khaki-700',
-}) => {
-  return (
-    <div className="bg-white p-4 sm:p-5 rounded-2xl border border-oyster-200 shadow-xs flex items-center justify-between">
-      <div className="space-y-1">
-        <p className="text-[11px] font-bold uppercase tracking-wider text-jacobean/60">
-          {title}
-        </p>
-        <p className="font-serif text-2xl sm:text-3xl font-bold text-jacobean">
-          {value}
-        </p>
-        {subtitle && (
-          <p className="text-[11px] text-jacobean/50 font-medium">
-            {subtitle}
-          </p>
-        )}
-      </div>
-
-      <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${colorClass}`}>
-        <Icon className="w-5 h-5" />
-      </div>
+  tone = 'neutral',
+}) => (
+  <div className="flex items-start justify-between gap-3 rounded-card border border-oyster-300 bg-lace p-4 shadow-card">
+    <div className="min-w-0">
+      <p className="text-xs font-semibold uppercase tracking-eyebrow text-jacobean/70">{label}</p>
+      <p className="mt-2 text-2xl font-semibold leading-none tracking-tight text-jacobean">
+        {value}
+      </p>
+      {detail && <p className="mt-2 text-[0.8125rem] leading-snug text-jacobean/65">{detail}</p>}
     </div>
-  );
-};
+
+    {/* Decorative: the label already carries the meaning, so the icon stays out of the a11y tree. */}
+    <span
+      aria-hidden="true"
+      className={`grid h-9 w-9 shrink-0 place-items-center rounded-xl ${TONES[tone]}`}
+    >
+      <Icon className="h-4 w-4" />
+    </span>
+  </div>
+)

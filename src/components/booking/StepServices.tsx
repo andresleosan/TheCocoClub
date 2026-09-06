@@ -1,141 +1,169 @@
-import React from 'react';
-import { Check, Clock, Plus, Sparkles } from 'lucide-react';
-import { SERVICES_DATA, SERVICE_ADDONS } from '../../data/services';
-import { ServiceItem, ServiceAddOn } from '../../types';
-import { formatDuration, formatPrice } from '../../utils/formatters';
+import React from 'react'
+import { Check, Clock } from 'lucide-react'
+import { SERVICES_DATA, SERVICE_ADDONS } from '../../data/services'
+import { ServiceAddOn, ServiceItem } from '../../types'
+import { formatDuration, formatPrice } from '../../utils/formatters'
+
+/**
+ * Step one — the treatment.
+ *
+ * Every row here used to be a bare `div onClick`: unreachable by keyboard, silent to a screen
+ * reader, and sitting on the one screen a client must get through to reach the studio. They are
+ * now a native radio group and a native checkbox group, so selection, arrow-key movement and
+ * the state announcement all come from the platform instead of being re-implemented badly.
+ *
+ * The heading no longer counts the step ("1. Choose Your Treatment") — the stepper above it
+ * already says which step this is, and saying it twice just crowded the panel.
+ */
 
 interface StepServicesProps {
-  selectedService: ServiceItem | null;
-  onSelectService: (service: ServiceItem) => void;
-  selectedAddOns: ServiceAddOn[];
-  onToggleAddOn: (addon: ServiceAddOn) => void;
+  selectedService: ServiceItem | null
+  onSelectService: (service: ServiceItem) => void
+  selectedAddOns: ServiceAddOn[]
+  onToggleAddOn: (addon: ServiceAddOn) => void
+  /** Owned by the modal, so the panel that receives focus on each step announces its heading. */
+  headingId: string
 }
+
+/** Shared by both groups: the visible box a hidden native input drives. */
+const box = (selected: boolean): string =>
+  `flex w-full items-start gap-3 rounded-card border p-4 text-left transition-colors
+   peer-focus-visible:ring-2 peer-focus-visible:ring-redRobin-700 ${
+     selected
+       ? 'border-jacobean bg-pearlBush/60'
+       : 'border-oyster-300/70 bg-lace hover:border-oyster-400 hover:bg-pearlBush/30'
+   }`
 
 export const StepServices: React.FC<StepServicesProps> = ({
   selectedService,
   onSelectService,
   selectedAddOns,
   onToggleAddOn,
-}) => {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h3 className="font-serif text-2xl font-bold text-jacobean">
-          1. Choose Your Treatment
-        </h3>
-        <p className="text-xs sm:text-sm text-jacobean/70">
-          Select a signature treatment tailored by Deoana Moreno.
-        </p>
-      </div>
+  headingId,
+}) => (
+  <div className="space-y-8 px-6 py-6 sm:px-8">
+    <div>
+      <h3 id={headingId} className="u-quote text-lg text-jacobean">
+        Choose your treatment
+      </h3>
+      <p className="mt-1 text-sm text-jacobean/70">
+        One appointment, one pair of hands. Prices are the studio's list price — Deoana confirms
+        the final figure when she sees your nails.
+      </p>
+    </div>
 
-      {/* Main Service List */}
-      <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
+    <fieldset className="m-0 border-0 p-0">
+      <legend className="sr-only">Treatment</legend>
+
+      <div className="space-y-3">
         {SERVICES_DATA.map((service) => {
-          const isSelected = selectedService?.id === service.id;
+          const selected = selectedService?.id === service.id
+
           return (
-            <div
-              key={service.id}
-              onClick={() => onSelectService(service)}
-              className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-4 ${
-                isSelected
-                  ? 'border-redRobin bg-redRobin-50/50 shadow-sm ring-1 ring-redRobin'
-                  : 'border-oyster-200 bg-white hover:border-oyster-300 hover:bg-oyster-50/50'
-              }`}
-            >
-              <div className="flex items-center gap-3">
-                <div
-                  className={`w-6 h-6 rounded-full flex items-center justify-center border transition-colors shrink-0 ${
-                    isSelected
-                      ? 'bg-redRobin border-redRobin text-white'
-                      : 'border-oyster-300 bg-white'
+            <label key={service.id} className="block cursor-pointer">
+              <input
+                type="radio"
+                name="booking-treatment"
+                value={service.id}
+                checked={selected}
+                onChange={() => onSelectService(service)}
+                className="peer sr-only"
+              />
+
+              <span className={box(selected)}>
+                <span
+                  aria-hidden="true"
+                  className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full border ${
+                    selected ? 'border-jacobean bg-jacobean text-lace' : 'border-oyster-400 bg-lace'
                   }`}
                 >
-                  {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
-                </div>
-
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h4 className="font-serif text-base font-bold text-jacobean leading-tight">
-                      {service.name}
-                    </h4>
-                    {service.badge && (
-                      <span className="hidden sm:inline px-2 py-0.5 text-[10px] font-bold bg-khaki-100 text-khaki-800 rounded-full">
-                        {service.badge}
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-jacobean/60 mt-0.5">
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-khaki-600" />
-                      {formatDuration(service.durationMinutes)}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="text-right shrink-0">
-                <span className="font-serif text-lg font-bold text-jacobean">
-                  {formatPrice(service.price)}
+                  {selected && <Check className="h-3 w-3" strokeWidth={3} />}
                 </span>
-              </div>
-            </div>
-          );
+
+                <span className="min-w-0 flex-1">
+                  <span className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                    <span className="text-sm font-semibold text-jacobean">{service.name}</span>
+                    <span className="text-sm font-semibold text-jacobean">
+                      {formatPrice(service.price)}
+                    </span>
+                  </span>
+
+                  <span className="mt-1 block text-sm leading-snug text-jacobean/70">
+                    {service.shortDescription}
+                  </span>
+
+                  <span className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-medium text-khaki-700">
+                    <Clock className="h-3.5 w-3.5" aria-hidden="true" />
+                    {formatDuration(service.durationMinutes)}
+                    {service.badge && (
+                      <>
+                        <span aria-hidden="true" className="text-oyster-400">
+                          ·
+                        </span>
+                        <span className="text-redRobin-700">{service.badge}</span>
+                      </>
+                    )}
+                  </span>
+                </span>
+              </span>
+            </label>
+          )
         })}
       </div>
+    </fieldset>
 
-      {/* Luxury Add-ons Section */}
-      <div className="pt-4 border-t border-oyster-200 space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-gold-600" />
-            <h4 className="text-xs font-bold uppercase tracking-wider text-jacobean">
-              Enhance Your Experience (Optional Add-ons)
-            </h4>
-          </div>
-          <span className="text-xs text-jacobean/50">Select any that apply</span>
-        </div>
+    <fieldset className="m-0 border-0 p-0">
+      <legend className="u-eyebrow mb-1 text-khaki-700">Add to it — optional</legend>
+      <p className="mb-3 text-sm text-jacobean/70">
+        Each one lengthens the appointment, so the times offered on the next step move with it.
+      </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-48 overflow-y-auto pr-1">
-          {SERVICE_ADDONS.map((addon) => {
-            const isAddonSelected = selectedAddOns.some(a => a.id === addon.id);
-            return (
-              <div
-                key={addon.id}
-                onClick={() => onToggleAddOn(addon)}
-                className={`p-3 rounded-xl border cursor-pointer transition-all flex items-start justify-between gap-2 ${
-                  isAddonSelected
-                    ? 'border-khaki bg-khaki-50/70 ring-1 ring-khaki'
-                    : 'border-oyster-200 bg-white hover:border-oyster-300'
-                }`}
-              >
-                <div className="flex items-start gap-2">
-                  <div
-                    className={`w-4 h-4 rounded mt-0.5 flex items-center justify-center border text-[10px] ${
-                      isAddonSelected
-                        ? 'bg-khaki border-khaki text-white'
-                        : 'border-oyster-300 bg-white'
-                    }`}
-                  >
-                    {isAddonSelected && <Check className="w-3 h-3 stroke-[3]" />}
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-jacobean leading-tight">
-                      {addon.name}
-                    </p>
-                    <p className="text-[11px] text-jacobean/60 line-clamp-1">
-                      +{addon.durationMinutes} mins • {addon.description}
-                    </p>
-                  </div>
-                </div>
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        {SERVICE_ADDONS.map((addon) => {
+          const selected = selectedAddOns.some((a) => a.id === addon.id)
 
-                <span className="text-xs font-bold text-redRobin shrink-0">
-                  +{formatPrice(addon.price)}
+          return (
+            <label key={addon.id} className="block cursor-pointer">
+              <input
+                type="checkbox"
+                checked={selected}
+                onChange={() => onToggleAddOn(addon)}
+                className="peer sr-only"
+              />
+
+              <span className={box(selected)}>
+                <span
+                  aria-hidden="true"
+                  className={`mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-md border ${
+                    selected ? 'border-jacobean bg-jacobean text-lace' : 'border-oyster-400 bg-lace'
+                  }`}
+                >
+                  {selected && <Check className="h-3 w-3" strokeWidth={3} />}
                 </span>
-              </div>
-            );
-          })}
-        </div>
+
+                <span className="min-w-0 flex-1">
+                  <span className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                    <span className="text-sm font-semibold text-jacobean">{addon.name}</span>
+                    <span className="text-sm font-semibold text-jacobean">
+                      +{formatPrice(addon.price)}
+                    </span>
+                  </span>
+
+                  <span className="mt-1 block text-sm leading-snug text-jacobean/70">
+                    {addon.description}
+                  </span>
+
+                  {/* Printed as "+15 mins" by hand before, which sidestepped the one formatter
+                      that knows how to say "1h 15m". */}
+                  <span className="mt-2 block text-xs font-medium text-khaki-700">
+                    Adds {formatDuration(addon.durationMinutes)}
+                  </span>
+                </span>
+              </span>
+            </label>
+          )
+        })}
       </div>
-    </div>
-  );
-};
+    </fieldset>
+  </div>
+)

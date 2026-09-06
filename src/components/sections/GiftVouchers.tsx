@@ -1,180 +1,187 @@
-import React, { useState } from 'react';
-import { Gift, MessageCircle, Heart } from 'lucide-react';
-import { STUDIO_INFO } from '../../data/studioInfo';
+import React, { useState } from 'react'
+import { MessageCircle } from 'lucide-react'
+import { Wordmark, Logomark } from '../brand/BrandMarks'
+import { RibbonBand } from '../brand/Decor'
+import { STUDIO_ADDRESS_LINE } from '../../data/studioInfo'
+import { formatPrice } from '../../utils/formatters'
+import { createWhatsAppVoucherLink } from '../../utils/whatsapp'
+
+/**
+ * A side offer, and it should read like one — this section sits after the treatments and
+ * must not compete with them.
+ *
+ * What was here was the page's worst brand offence. The card was built entirely on an
+ * invented gold-* scale that does not exist in this palette, its primary action was Tailwind
+ * emerald on pure white, and it typeset "THE COCO CLUB" as letterspaced Italiana caps — the
+ * exact opposite of the real wordmark's warm rounded script. It also minted a reference
+ * number ("CC-GIFT-4821") for a voucher that nothing on this site is able to issue.
+ *
+ * The preview is now the studio's own lockup on a dark ground, which is how the brand guide
+ * shows it. There is no sender field: WhatsApp already tells Deoana who is asking.
+ */
+
+const AMOUNTS = [50, 75, 100, 150]
+
+/** The card has room for a line or two, not a letter. */
+const MESSAGE_LIMIT = 140
 
 export const GiftVouchers: React.FC = () => {
-  const [amount, setAmount] = useState<number>(75);
-  const [customAmount, setCustomAmount] = useState<string>('');
-  const [recipient, setRecipient] = useState<string>('Sophie');
-  const [sender, setSender] = useState<string>('Charlotte');
-  const [message, setMessage] = useState<string>('Enjoy your relaxing private manicure ritual at The Coco Club!');
-  const [voucherCode] = useState(() => `CC-GIFT-${Math.floor(1000 + Math.random() * 9000)}`);
+  const [amount, setAmount] = useState(AMOUNTS[1])
+  const [recipient, setRecipient] = useState('')
+  const [message, setMessage] = useState('')
 
-  const finalAmount = customAmount ? Number(customAmount) || 50 : amount;
-
-  const handleWhatsAppVoucher = () => {
-    const cleanPhone = STUDIO_INFO.phone.replace(/[^0-9]/g, '');
-    const text = `Hello Deoana! 🎁\nI would like to order a bespoke Gift Voucher for The Coco Club in Saint Helier:\n\n🏷️ Amount: £${finalAmount}\n👤 To: ${recipient}\n💌 From: ${sender}\n📝 Message: "${message}"\n🔖 Reference: #${voucherCode}\n\nPlease let me know how to arrange the payment and collection/digital voucher. Thank you!`;
-    window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(text)}`, '_blank');
-  };
+  const forWhom = recipient.trim()
+  const note = message.trim()
+  const remaining = MESSAGE_LIMIT - message.length
 
   return (
-    <section className="py-20 lg:py-24 bg-pearlBush/40 relative overflow-hidden border-t border-oyster-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-redRobin-50 border border-redRobin-200 text-redRobin-900 text-[10px] sm:text-[11px] font-bold uppercase tracking-widest-luxury">
-            <Gift className="w-3.5 h-3.5 text-redRobin" />
-            <span>The Gift of Pampering</span>
-          </div>
+    <section id="vouchers" className="u-section-tight bg-lace">
+      <div className="u-container">
+        <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
+          {/* The card mirrors the fields and carries no information of its own, so it stays
+              out of the accessibility tree rather than reading every keystroke twice. */}
+          <figure className="lg:col-span-5">
+            <div
+              aria-hidden="true"
+              className="relative overflow-hidden rounded-panel bg-jacobean p-7 text-lace shadow-panel sm:p-9"
+            >
+              <RibbonBand edge="bottom" className="text-lace/10" />
 
-          <h2 className="font-display text-4xl sm:text-6xl font-normal text-jacobean tracking-tight uppercase leading-tight">
-            The Coco Club Gift Vouchers
-          </h2>
-          <p className="text-sm sm:text-base text-jacobean/70 leading-relaxed">
-            Treat someone special to an unhurried, private 1-on-1 beauty or podology experience at 14 La Motte Street.
-          </p>
-        </div>
+              <div className="relative">
+                <div className="flex items-start justify-between gap-5">
+                  <Wordmark className="h-auto w-36 text-lace sm:w-40" />
+                  <span className="u-title text-3xl leading-none text-oyster-200">
+                    {formatPrice(amount)}
+                  </span>
+                </div>
 
-        {/* 2-Column Voucher Builder & Live Preview */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          
-          {/* Left Column: Voucher Customizer Form */}
-          <div className="lg:col-span-6 bg-white p-6 sm:p-8 rounded-3xl border border-oyster-200 shadow-sm space-y-6">
-            <h3 className="font-display text-2xl font-bold text-jacobean border-b border-oyster-100 pb-3 uppercase tracking-wide">
-              Personalise Your Voucher
-            </h3>
+                <div className="mt-8 border-t border-lace/15 pt-5">
+                  <p className="u-eyebrow text-oyster-400">For</p>
+                  <p className="u-quote mt-1.5 text-xl leading-snug text-lace">
+                    {forWhom || 'Someone you like a great deal'}
+                  </p>
 
-            {/* Amount Selection */}
-            <div className="space-y-2">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-jacobean">
-                Select Voucher Value (£ GBP)
-              </label>
-              <div className="grid grid-cols-4 gap-2">
-                {[50, 75, 100, 150].map((val) => (
-                  <button
-                    key={val}
-                    type="button"
-                    onClick={() => {
-                      setAmount(val);
-                      setCustomAmount('');
-                    }}
-                    className={`py-2.5 rounded-xl text-xs font-bold border transition-all ${
-                      amount === val && !customAmount
-                        ? 'bg-jacobean text-lace border-jacobean shadow-xs'
-                        : 'bg-lace text-jacobean border-oyster-300 hover:bg-oyster-100'
-                    }`}
-                  >
-                    £{val}
-                  </button>
-                ))}
+                  {note && (
+                    <p className="mt-4 text-sm leading-relaxed text-oyster-300">“{note}”</p>
+                  )}
+                </div>
+
+                <div className="mt-8 flex items-center gap-2.5 border-t border-lace/15 pt-5">
+                  <Logomark className="h-5 w-auto shrink-0 text-oyster-400" />
+                  <span className="text-xs text-oyster-400">{STUDIO_ADDRESS_LINE}</span>
+                </div>
               </div>
             </div>
 
-            {/* Recipient & Sender */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-jacobean">Recipient Name</label>
+            <figcaption className="mt-3 text-center text-xs text-jacobean/70">
+              A preview. Deoana writes the real one.
+            </figcaption>
+          </figure>
+
+          <div className="lg:col-span-7">
+            <p className="u-eyebrow text-khaki-700">Gift vouchers</p>
+
+            <h2 className="u-title mt-3 text-2xl text-jacobean sm:text-3xl">
+              Give someone an unhurried afternoon
+            </h2>
+
+            <p className="mt-4 max-w-prose text-sm leading-relaxed text-jacobean/80 sm:text-base">
+              Choose a value, add a name and a few words if you would like them on the card, and
+              the details go to Deoana on WhatsApp. Nothing is paid for on this page — she
+              confirms the amount, arranges payment and tells you how to collect it.
+            </p>
+
+            <div className="mt-8 space-y-6">
+              <fieldset>
+                <legend className="u-label">Voucher value</legend>
+
+                <div className="grid grid-cols-4 gap-2 sm:gap-3">
+                  {AMOUNTS.map((value) => (
+                    <label key={value} className="cursor-pointer">
+                      <input
+                        type="radio"
+                        name="voucher-amount"
+                        value={value}
+                        checked={amount === value}
+                        onChange={() => setAmount(value)}
+                        className="peer sr-only"
+                      />
+                      {/* The input is visually hidden, so the ring has to be carried by the
+                          chip — never leave a keyboard user with no focus indicator. */}
+                      <span
+                        className="flex min-h-[2.75rem] items-center justify-center rounded-full border
+                                   border-oyster-300 bg-lace text-sm font-semibold text-jacobean
+                                   transition-colors hover:border-khaki-500
+                                   peer-checked:border-jacobean peer-checked:bg-jacobean peer-checked:text-lace
+                                   peer-focus-visible:outline peer-focus-visible:outline-2
+                                   peer-focus-visible:outline-offset-2 peer-focus-visible:outline-redRobin"
+                      >
+                        {formatPrice(value)}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+
+                <p className="mt-2.5 text-xs text-jacobean/70">
+                  Any other value can be arranged — just say so when you message.
+                </p>
+              </fieldset>
+
+              <div>
+                <label htmlFor="voucher-recipient" className="u-label">
+                  Who is it for? <span className="font-normal normal-case">(optional)</span>
+                </label>
                 <input
+                  id="voucher-recipient"
                   type="text"
                   value={recipient}
-                  onChange={(e) => setRecipient(e.target.value)}
-                  placeholder="e.g. Sophie"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-oyster-300 text-xs focus:outline-none focus:ring-2 focus:ring-redRobin/20"
+                  onChange={(event) => setRecipient(event.target.value)}
+                  placeholder="Their name"
+                  autoComplete="off"
+                  className="u-field"
                 />
               </div>
-              <div className="space-y-1">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-jacobean">From (Your Name)</label>
-                <input
-                  type="text"
-                  value={sender}
-                  onChange={(e) => setSender(e.target.value)}
-                  placeholder="e.g. Charlotte"
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-oyster-300 text-xs focus:outline-none focus:ring-2 focus:ring-redRobin/20"
+
+              <div>
+                <label htmlFor="voucher-message" className="u-label">
+                  A few words <span className="font-normal normal-case">(optional)</span>
+                </label>
+                {/* Was rows={2} around a 63-character default, so the note it invited never
+                    fitted the box it was typed into. */}
+                <textarea
+                  id="voucher-message"
+                  rows={4}
+                  value={message}
+                  maxLength={MESSAGE_LIMIT}
+                  onChange={(event) => setMessage(event.target.value)}
+                  placeholder="Happy birthday — your feet have earned this."
+                  className="u-field resize-y"
                 />
+                <p className="mt-1.5 text-xs text-jacobean/70">
+                  {remaining} {remaining === 1 ? 'character' : 'characters'} left.
+                </p>
               </div>
             </div>
 
-            {/* Message */}
-            <div className="space-y-1">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-jacobean">Personal Note / Message</label>
-              <textarea
-                rows={2}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder="Write your personal greeting..."
-                className="w-full px-3.5 py-2 rounded-xl border border-oyster-300 text-xs focus:outline-none focus:ring-2 focus:ring-redRobin/20 font-bodySerif italic"
-              />
-            </div>
+            <div className="mt-8">
+              <a
+                href={createWhatsAppVoucherLink(amount, forWhom || undefined, note || undefined)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="u-btn-primary w-full sm:w-auto"
+              >
+                <MessageCircle className="h-4 w-4" />
+                Ask about a {formatPrice(amount)} voucher
+              </a>
 
-            <button
-              onClick={handleWhatsAppVoucher}
-              className="w-full py-3.5 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold uppercase tracking-wider shadow-md transition-colors flex items-center justify-center gap-2"
-            >
-              <MessageCircle className="w-4 h-4" />
-              <span>Order Voucher via WhatsApp (£{finalAmount})</span>
-            </button>
-          </div>
-
-          {/* Right Column: Live Luxury Voucher Preview */}
-          <div className="lg:col-span-6">
-            <div className="relative rounded-3xl p-8 sm:p-10 bg-gradient-to-br from-jacobean via-jacobean-800 to-jacobean text-lace shadow-2xl border-4 border-gold-400/40 space-y-6 overflow-hidden">
-              
-              {/* Gold Shimmer Background Elements */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-gold-400/10 rounded-full blur-3xl pointer-events-none" />
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-redRobin/20 rounded-full blur-3xl pointer-events-none" />
-
-              {/* Card Header */}
-              <div className="flex items-center justify-between border-b border-white/15 pb-4 relative z-10">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-full bg-redRobin flex items-center justify-center shadow-md">
-                    <Heart className="w-4 h-4 text-lace fill-current" />
-                  </div>
-                  <div>
-                    <span className="font-display text-xl font-bold tracking-wider uppercase">
-                      THE COCO CLUB
-                    </span>
-                    <p className="text-[10px] text-gold-300 uppercase tracking-widest font-sans">
-                      Privilege Gift Card
-                    </p>
-                  </div>
-                </div>
-
-                <span className="font-display text-4xl font-bold text-gold-300">
-                  £{finalAmount}
-                </span>
-              </div>
-
-              {/* Card Body */}
-              <div className="space-y-4 relative z-10">
-                <div className="space-y-1">
-                  <p className="text-[10px] uppercase font-bold tracking-widest text-oyster-400">Presented To</p>
-                  <p className="font-signature text-3xl sm:text-4xl text-lace leading-none">{recipient || 'Valued Guest'}</p>
-                </div>
-
-                <div className="bg-white/5 backdrop-blur-xs p-3.5 rounded-2xl border border-white/10 text-xs text-oyster-200 font-bodySerif italic">
-                  “{message || 'With love, for your private pampering session.'}”
-                </div>
-
-                <div className="flex items-center justify-between text-[11px] text-oyster-300 pt-1">
-                  <span>With Love From: <strong>{sender || 'A Friend'}</strong></span>
-                  <span className="font-mono text-gold-400">#{voucherCode}</span>
-                </div>
-              </div>
-
-              {/* Card Footer */}
-              <div className="pt-4 border-t border-white/15 flex items-center justify-between text-[10px] text-oyster-400 relative z-10 uppercase tracking-wider">
-                <span>14 La Motte St, Saint Helier, Jersey</span>
-                <span>Valid for all treatments</span>
-              </div>
-
+              <p className="mt-3 text-xs text-jacobean/70">
+                This opens WhatsApp with your details written out. Sending it is a request —
+                the studio replies to arrange the rest.
+              </p>
             </div>
           </div>
-
         </div>
-
       </div>
     </section>
-  );
-};
+  )
+}

@@ -1,34 +1,62 @@
-import { Booking } from '../types';
-import { STUDIO_INFO } from '../data/studioInfo';
+import { Booking } from '../types'
+import { STUDIO_INFO, STUDIO_ADDRESS_LINE } from '../data/studioInfo'
+import { formatDateFriendly, formatDuration, formatPrice } from './formatters'
 
+/**
+ * WhatsApp is not a nice-to-have on this site — it is the delivery mechanism.
+ *
+ * The booking form has no backend; it writes to the visitor's own localStorage and nothing
+ * else. Until that changes, the only thing that actually reaches the studio is the message
+ * these helpers compose, so the booking flow must treat sending it as a required step and
+ * must describe the result as a *request* rather than a confirmed appointment.
+ */
+
+const waLink = (message: string): string =>
+  `https://wa.me/${STUDIO_INFO.phoneDigits}?text=${encodeURIComponent(message)}`
+
+/** The message a client sends to request the slot they just chose. */
 export const createWhatsAppBookingLink = (booking: Booking): string => {
-  const cleanPhone = STUDIO_INFO.phone.replace(/[^0-9]/g, '');
-  
-  const addOnsText = booking.addOns.length > 0
-    ? `\n✨ Add-ons: ${booking.addOns.map(a => a.name).join(', ')}`
-    : '';
+  const addOns = booking.addOns.length
+    ? `\nAdd-ons: ${booking.addOns.map((a) => a.name).join(', ')}`
+    : ''
+  const beverage = booking.beveragePreference ? `\nTo drink: ${booking.beveragePreference}` : ''
+  const notes = booking.notes ? `\nNotes: ${booking.notes}` : ''
 
-  const notesText = booking.notes ? `\n📝 Notes: ${booking.notes}` : '';
-  const beverageText = booking.beveragePreference ? `\n☕ Welcome Drink: ${booking.beveragePreference}` : '';
+  return waLink(
+    `Hello Deoana — I'd like to request this appointment at The Coco Club.
 
-  const message = `Hello Deoana! 💅
-I have just booked an appointment at The Coco Club:
+Treatment: ${booking.serviceName}${addOns}
+Date: ${formatDateFriendly(booking.date)}
+Time: ${booking.timeSlot}
+About: ${formatDuration(booking.totalDurationMinutes)} · ${formatPrice(booking.totalPrice)}
 
-📅 Date: ${booking.date}
-⏰ Time: ${booking.timeSlot}
-🏷️ Service: ${booking.serviceName}${addOnsText}
-💰 Total: £${booking.totalPrice} (~${booking.totalDurationMinutes} mins)
-👤 Name: ${booking.clientName}
-📱 Phone: ${booking.clientPhone}${beverageText}${notesText}
-🔖 Booking Ref: ${booking.referenceNumber}
+Name: ${booking.clientName}
+Phone: ${booking.clientPhone}${beverage}${notes}
+Reference: ${booking.referenceNumber}
 
-Looking forward to my appointment at 14 La Motte Street!`;
+Please let me know if that time works. Thank you!`,
+  )
+}
 
-  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
-};
+/** General enquiry, for the header and the quieter CTAs. */
+export const createWhatsAppGeneralInquiryLink = (): string =>
+  waLink(
+    `Hello Deoana — I found The Coco Club online and I'd like to ask about an appointment at ${STUDIO_ADDRESS_LINE}.`,
+  )
 
-export const createWhatsAppGeneralInquiryLink = (): string => {
-  const cleanPhone = STUDIO_INFO.phone.replace(/[^0-9]/g, '');
-  const message = `Hello Deoana! 🤍\nI would love to inquire about booking a private appointment at The Coco Club in Saint Helier.`;
-  return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
-};
+/** Enquiry pre-filled with one treatment, for use from the treatment list and the matcher. */
+export const createWhatsAppServiceInquiryLink = (serviceName: string): string =>
+  waLink(`Hello Deoana — I'd like to ask about the ${serviceName} at The Coco Club.`)
+
+/** Gift voucher enquiry: vouchers are arranged personally, not sold through the site. */
+export const createWhatsAppVoucherLink = (
+  amount: number,
+  recipient?: string,
+  message?: string,
+): string =>
+  waLink(
+    `Hello Deoana — I'd like to arrange a ${formatPrice(amount)} gift voucher for The Coco Club.` +
+      (recipient ? `\nFor: ${recipient}` : '') +
+      (message ? `\nMessage to include: ${message}` : '') +
+      `\n\nCould you let me know how to pay and collect it? Thank you!`,
+  )

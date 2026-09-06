@@ -1,226 +1,292 @@
-import { ServiceCategory, ServiceItem, ServiceAddOn } from '../types';
+import { ServiceCategory, ServiceItem, ServiceAddOn } from '../types'
 
+/**
+ * The menu. This file is the price list, so it is the file most likely to be read out loud
+ * to a client — every number in it has to be the number they will actually pay.
+ *
+ * Three things were fixed here rather than restyled:
+ *
+ * 1. PRICE. The old foot-care section advertised £85 while the booking flow charged £65 for
+ *    the same appointment. £65 is the figure the booker, the WhatsApp message and the demo
+ *    rows have always used, so £65 is the price. There is now exactly one number per
+ *    treatment and no component may print a different one.
+ * 2. IMAGES. Every service carried an `imageUrl` pointing at Unsplash — stock photography of
+ *    other people's hands, shown as this studio's work. The field is gone from the type.
+ * 3. REVIEWS. `rating` and `reviewCount` were invented numbers on a real trading business.
+ *    Gone too. If a treatment deserves a badge it gets a fact, not a compliment.
+ *
+ * On the wording of the foot-care entries: "chiropodist" and "podiatrist" are protected
+ * titles in Jersey and the UK. Deoana is neither, and the previous copy — "medical-grade",
+ * "clinical", "safely treat" — borrowed the authority of both. What she actually does is
+ * skilled, unhurried, thirty-years-practised foot care, and saying that plainly sells it
+ * perfectly well.
+ *
+ * Service ids are deliberately unchanged, including 'srv-medical-podology'. They are the key
+ * that links a stored booking in a client's browser to the menu; renaming one silently
+ * orphans every request already sitting in someone's localStorage. Ids are never rendered.
+ */
+
+/**
+ * The category vocabulary, for anything that needs to name a group — a filter, a chip row, a
+ * WhatsApp enquiry. The Treatments section deliberately typesets its own headings so it can
+ * order and word them for the page, so treat this as the shared naming, not the page copy.
+ */
 export const SERVICE_CATEGORIES: { id: ServiceCategory; name: string; description: string }[] = [
-  { id: 'all', name: 'All Treatments', description: 'Curated beauty & podology rituals in Saint Helier' },
-  { id: 'signature-biab', name: 'Signature BIAB & Natural Care', description: 'Strengthening builder gel & Russian dry manicure precision' },
-  { id: 'sculpted-extensions', name: 'Acrylic & Hard Gel Sculpting', description: 'Hand-sculpted bespoke length, durability & iconic shapes' },
-  { id: 'podology-care', name: 'Clinical Podology & Pedicures', description: '30+ years of specialized medical foot care & restorative pedicures' },
-  { id: 'haute-nail-art', name: 'Haute Nail Art & Finish', description: 'Intricate hand-painted masterpieces, 3D accents & chrome glazes' },
-  { id: 'spa-rituals', name: 'Spa & Restorative Rituals', description: 'Intense hydration, warm paraffin infusions & IBX keratin repair' },
-];
+  {
+    id: 'all',
+    name: 'Everything',
+    description: 'Nails and foot care, one client at a time',
+  },
+  {
+    id: 'signature-biab',
+    name: 'BIAB & Natural Nails',
+    description: 'Builder gel overlays and dry Russian manicures',
+  },
+  {
+    id: 'sculpted-extensions',
+    name: 'Sculpted Extensions',
+    description: 'Length built on forms — shape, curve and structure',
+  },
+  {
+    id: 'podology-care',
+    name: 'Podology & Pedicures',
+    description: 'Thirty years of unhurried, expert foot care',
+  },
+  {
+    id: 'haute-nail-art',
+    name: 'Nail Art & Finishes',
+    description: 'Hand-painted detail, chrome glazes and 3D work',
+  },
+  {
+    id: 'spa-rituals',
+    name: 'Restorative Rituals',
+    description: 'Keratin repair and warm paraffin for tired hands',
+  },
+]
 
+/**
+ * Add-ons are priced and timed independently and simply added to the appointment, which is
+ * why the booking summary can total them without any special cases.
+ */
 export const SERVICE_ADDONS: ServiceAddOn[] = [
   {
     id: 'addon-paraffin',
     name: 'Warm Lavender Paraffin Wrap',
     price: 12,
     durationMinutes: 15,
-    description: 'Deep thermal hydration that leaves hands & feet ultra-soft and relieves joint tension.'
+    description: 'Deep warmth for hands or feet. The skin comes out noticeably softer.',
   },
   {
     id: 'addon-ibx',
-    name: 'IBX Deep Keratin Repair System',
+    name: 'IBX Keratin Repair',
     price: 15,
     durationMinutes: 15,
-    description: 'Penetrates inside the natural nail plate to fuse peeling layers and heal damaged nails.'
+    description: 'Warmed into the nail plate to bind peeling layers back together.',
   },
   {
     id: 'addon-chrome',
-    name: 'Haute Glazed Chrome / Pearl Finish',
+    name: 'Chrome or Pearl Glaze',
     price: 10,
     durationMinutes: 10,
-    description: 'Ultra-reflective Hailey Bieber glazed donut pearl, metallic gold, or rose chrome effect.'
+    description: 'A glazed pearl, soft metallic or rose chrome finish over your colour.',
   },
   {
     id: 'addon-french',
-    name: 'Hand-Painted Micro French Tips',
+    name: 'Hand-Painted French Tips',
     price: 12,
     durationMinutes: 15,
-    description: 'Razor-sharp classic, micro, or deep curved French smile lines tailored to your nail shape.'
+    description: 'Classic, micro or deep-curved smile lines, drawn to suit your nail shape.',
   },
   {
     id: 'addon-nailart-tier1',
-    name: 'Custom Accent Nail Art (2 nails)',
+    name: 'Accent Nail Art (two nails)',
     price: 10,
     durationMinutes: 15,
-    description: 'Delicate gold leaf encapsulation, minimal geometric lines, or gemstone placement.'
+    description: 'Fine line work, foil or a single stone placed on two nails.',
   },
   {
     id: 'addon-nailart-tier2',
-    name: 'Full Set Bespoke Haute Art (10 nails)',
+    name: 'Full Set Nail Art (ten nails)',
     price: 28,
     durationMinutes: 30,
-    description: 'Complex 3D gel flowers, tortoiseshell, marble swirls, or personalized design.'
+    description: 'Sculpted 3D detail, marbling or tortoiseshell across all ten nails.',
   },
   {
     id: 'addon-callus-peel',
-    name: 'Medical Callus Softening Treatment',
+    name: 'Callus Softening Treatment',
     price: 15,
     durationMinutes: 15,
-    description: 'Specialized podological active gel peel that melts stubborn heel cracks and calluses.'
-  }
-];
+    description: 'An active gel that softens stubborn hard skin before it is worked back.',
+  },
+]
 
 export const SERVICES_DATA: ServiceItem[] = [
   {
     id: 'srv-biab-signature',
-    name: 'The Coco Club Signature BIAB Overlay',
+    name: 'Signature BIAB Overlay',
     category: 'signature-biab',
     price: 55,
     durationMinutes: 75,
-    shortDescription: 'Premium Builder in a Bottle structured overlay on natural nails with e-file dry Russian manicure.',
-    fullDescription: 'Our flagship strengthening treatment. Includes comprehensive e-file cuticle care, bespoke apex architecture reinforcement with luxury BIAB gel, and your choice of high-gloss shade or neutral nude finish. Ideal for growing strong natural nails.',
-    badge: 'Client Favourite',
+    shortDescription:
+      'A builder-gel overlay on your own nails, over a dry Russian manicure. No extensions, no soaking.',
+    fullDescription:
+      'The appointment most people come back for. The nail is prepped dry, the cuticle worked with an e-file, then builder gel is placed to give the nail an apex it does not have on its own — which is what stops it bending and splitting. Finished in a gloss colour or a sheer nude. It grows out with the nail instead of sitting on top of it.',
+    badge: 'Natural nails only',
     popular: true,
     included: [
-      'Russian dry precision cuticle clean & contouring',
-      'Structural BIAB apex balancing for maximum strength',
-      'Long-lasting chip-free gel colour or sheer luxury nude',
-      'Organic botanical cuticle oil infusion & hand massage'
+      'Dry Russian cuticle work, no soaking',
+      'Builder gel apex, shaped for strength',
+      'Gel colour or a sheer nude finish',
+      'Cuticle oil and a hand massage',
     ],
     recommendedAddons: ['addon-french', 'addon-chrome', 'addon-paraffin'],
-    imageUrl: 'https://images.unsplash.com/photo-1604654894610-df63bc536371?auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 'srv-russian-manicure',
-    name: 'Master Russian / Dry Precision Manicure',
+    name: 'Russian Dry Manicure',
     category: 'signature-biab',
     price: 45,
     durationMinutes: 60,
-    shortDescription: 'Flawless diamond-bit cuticle grooming, natural nail shaping, and long-lasting gel polish.',
-    fullDescription: 'Experience Deoana Moreno’s world-class diamond bit technique. Deep, seamless cuticle clearing that allows gel polish to be applied flush to the eponychium for up to 4+ weeks of outgrown perfection.',
+    shortDescription:
+      'Diamond-bit cuticle work, shaping, and gel polish laid right up to the skin.',
+    fullDescription:
+      'No water and no soaking. The cuticle is cleared with a diamond bit so the polish can sit flush against the skin, which is why the regrowth line takes so much longer to show. It is slow, close work, and it is how Deoana has worked for most of thirty years.',
     included: [
-      'Deep diamond-burr cuticle exfoliation',
-      'Custom nail shaping & symmetry refinement',
-      'Flawless close-to-cuticle gel polish application',
-      'Nourishing serum & hot towel finish'
+      'Diamond-bit cuticle work, no soaking',
+      'Shaping and symmetry, nail by nail',
+      'Gel polish flush to the cuticle',
+      'Nourishing serum and a hot towel',
     ],
     recommendedAddons: ['addon-ibx', 'addon-paraffin'],
-    imageUrl: 'https://images.unsplash.com/photo-1632345031435-8727f6897d53?auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 'srv-acrylic-fullset',
-    name: 'Bespoke Sculpted Acrylic Extensions (Full Set)',
+    name: 'Sculpted Acrylic Extensions',
     category: 'sculpted-extensions',
     price: 75,
     durationMinutes: 105,
-    shortDescription: 'Custom hand-sculpted acrylic length with bespoke curvature, lightweight feel, and superior strength.',
-    fullDescription: 'Sculpted on premium forms (never glued plastic tips) to ensure a customized arch matching your unique nail bed. Lightweight, ultra-durable, and finished with your preferred shape (Almond, Coffin, Stiletto, or Square).',
-    badge: 'Master Craft',
+    shortDescription:
+      'Length sculpted on forms — never glued plastic tips — in the shape and curve you choose.',
+    fullDescription:
+      'Built on forms rather than tips, so the arch follows your own nail bed instead of fighting it. Lighter than it looks and strong where the stress actually falls. Almond, coffin, stiletto or square, finished in gel and filed by hand.',
     popular: true,
     included: [
-      'Precision cuticle prep & nail bed sanitization',
-      'Hand-sculpted acrylic extensions on bespoke forms',
-      'Flawless hand filing & structural apex balancing',
-      'High-gloss gel polish finish & revitalizing cuticle nectar'
+      'Dry prep and nail plate cleaning',
+      'Acrylic sculpted on forms, not tips',
+      'Hand filing and apex balancing',
+      'Gloss gel finish and cuticle oil',
     ],
     recommendedAddons: ['addon-nailart-tier2', 'addon-chrome'],
-    imageUrl: 'https://images.unsplash.com/photo-1519014816548-bf5fe059798b?auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 'srv-ombre-babyboomer',
-    name: 'French Ombré / Babyboomer Luxury Set',
+    name: 'French Ombré / Babyboomer Set',
     category: 'sculpted-extensions',
     price: 85,
     durationMinutes: 120,
-    shortDescription: 'Seamless blend from soft blush rose into crisp milk-white for timeless, modern royal elegance.',
-    fullDescription: 'A classic haute look perfected by Deoana’s 30 years of color-fading mastery. Features a soft gradient blend of premium cover pink and porcelain white acrylics, sealed with glass-like topcoat.',
+    shortDescription:
+      'A blush-to-white fade blended inside the product rather than painted over the top.',
+    fullDescription:
+      'The gradient is built with cover pink and porcelain white while the nail is being sculpted, so it lives inside the structure and there is no join to chip away. Available over your natural nails or on extensions, sealed with a glass-smooth topcoat.',
     included: [
-      'Full dry manicure & cuticle detailing',
-      'Sculpted extension or natural overlay with 2-tone gradient',
-      'Ultra-smooth buffing and high-shine sealant',
-      'Hydrating luxury hand treatment'
+      'Full dry manicure and cuticle detail',
+      'Two-tone fade blended in the product',
+      'Buffed smooth and sealed with gloss',
+      'Hydrating hand treatment to finish',
     ],
     recommendedAddons: ['addon-paraffin', 'addon-nailart-tier1'],
-    imageUrl: 'https://images.unsplash.com/photo-1607779097040-26e80aa78e66?auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 'srv-acrylic-infill',
-    name: 'Sculpted Infill, Rebalance & Color Refresh',
+    name: 'Infill, Rebalance & Colour Change',
     category: 'sculpted-extensions',
     price: 50,
     durationMinutes: 75,
-    shortDescription: 'Maintain your extensions: rebalance growth apex, cuticle grooming, and new gel shade.',
-    fullDescription: 'Essential maintenance every 3 to 4 weeks. We re-establish the structural stress points, de-bulk overgrown product, renew cuticle health, and apply fresh gel colour.',
+    shortDescription:
+      'Maintenance every three to four weeks: regrowth filled, apex reset, fresh colour.',
+    fullDescription:
+      'Old product is reduced rather than ripped off, the stress points are re-established at the regrowth, the cuticle is tidied dry and a new gel colour goes on. It gets its own appointment because rushing this is what breaks nails.',
     included: [
       'Careful e-file reduction of old product',
-      'Russian dry cuticle renewal',
-      'Structural acrylic/gel refill at the root',
-      'Fresh luxury gel coat & hydration'
+      'Dry cuticle renewal',
+      'Refilled and rebalanced at the regrowth',
+      'Fresh gel colour and hydration',
     ],
     recommendedAddons: ['addon-nailart-tier1', 'addon-french'],
-    imageUrl: 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 'srv-medical-podology',
-    name: 'Specialist Clinical Podological Pedicure',
+    name: 'Specialist Podology Pedicure',
     category: 'podology-care',
     price: 65,
     durationMinutes: 75,
-    shortDescription: 'Medical-grade foot & nail therapy led by Deoana Moreno. Relieves calluses, cracks & pressure points.',
-    fullDescription: 'Far beyond a cosmetic pedicure: this is a restorative medical-grade clinical foot health session. Deoana brings 30+ years of podological experience to safely treat stubborn heel hyperkeratosis, thick toenails, painful skin buildup, and ingrown nail corners with sterile European instruments.',
-    badge: '30+ Yrs Podology Mastery',
+    shortDescription:
+      'Hard skin, cracked heels and difficult toenails, worked on properly. Not a spa pedicure.',
+    fullDescription:
+      'Deoana has spent thirty years working on feet, and this is the appointment where that shows. Hard skin and cracked heels are reduced with an e-file, thick toenails are shaped and thinned back, and the corners are cleared so they stop pressing into the skin. Unhurried, and you walk out of it comfortable. If something ought to be looked at by a doctor, she will say so rather than work around it.',
+    badge: '30+ years of practice',
     popular: true,
     included: [
-      'Aseptic podology foot assessment & sanitization',
-      'Precision medical e-file removal of deep calluses & cracked heels',
-      'Anatomical toenail trimming & sulcus clearing for ingrown prevention',
-      'Deep antiseptic softening massage & barrier cream'
+      'A proper look at both feet first',
+      'Hard skin and cracked heels reduced',
+      'Thick toenails shaped and thinned',
+      'Corners cleared, then balm and massage',
     ],
     recommendedAddons: ['addon-paraffin', 'addon-callus-peel'],
-    imageUrl: 'https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 'srv-spa-pedicure-luxe',
-    name: 'Supreme Wellness Foot Ritual & Gel Polish',
+    name: 'Restorative Foot Ritual & Gel',
     category: 'podology-care',
     price: 60,
     durationMinutes: 75,
-    shortDescription: 'Holistic foot soak, sea salt exfoliation, callus smoothing, and chip-free gel polish.',
-    fullDescription: 'The ultimate relaxing sanctuary for tired feet. Indulge in an aromatic foot bath with essential botanical oils, gentle smoothing, warm moisturizing towels, reflexology-inspired foot massage, and long-lasting gel polish on toes.',
+    shortDescription:
+      'A long soak, gentle smoothing, a slow foot massage and gel colour on the toes.',
+    fullDescription:
+      'The softer foot appointment. An aromatic soak, a salt scrub, hard skin smoothed rather than worked back, warm towels, an unhurried massage and long-wearing gel on the toes. Book this one when your feet are fine and you simply want an hour of quiet.',
     included: [
-      'Aromatic Himalayan salt & rosemary foot bath',
-      'Gentle callus smoothing & micro-exfoliation scrub',
-      'Detailed cuticle grooming & nail shaping',
-      'Long-lasting high gloss gel toe colour'
+      'Himalayan salt and rosemary soak',
+      'Gentle smoothing and a salt scrub',
+      'Cuticle detail and toenail shaping',
+      'Gloss gel colour on the toes',
     ],
     recommendedAddons: ['addon-paraffin', 'addon-chrome'],
-    imageUrl: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 'srv-bespoke-nailart',
-    name: 'Bespoke Haute Nail Art Session',
+    name: 'Bespoke Nail Art Session',
     category: 'haute-nail-art',
     price: 60,
     durationMinutes: 90,
-    shortDescription: 'Dedicated artistic session for custom 3D textures, Korean jelly art, chrome swirls & gems.',
-    fullDescription: 'Bring your Pinterest board or let Deoana create a bespoke set tailored to your personal vibe, event, or wedding. Includes detailed sculpting of textures, gold foils, marble veins, and chrome accents.',
-    badge: 'Artistic Exclusive',
+    shortDescription:
+      'A whole appointment given to the art: 3D texture, chrome, foils and hand-painted detail.',
+    fullDescription:
+      'Bring a picture, or bring nothing and talk it through at the table. This is booked as its own session because ten nails of hand-painted work cannot be squeezed onto the end of a manicure. Prep, the design conversation and the finish are all in the time.',
     included: [
-      'Full dry manicure prep & base foundation',
-      'Consultation & design layout planning',
-      'Hand-crafted multidimensional art across all 10 nails',
-      'Reinforced encapsulation & ultra-durable diamond topcoat'
+      'Dry manicure prep and base',
+      'Design planned with you first',
+      'Hand-painted work across ten nails',
+      'Encapsulated and sealed with topcoat',
     ],
     recommendedAddons: ['addon-paraffin'],
-    imageUrl: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 'srv-ibx-paraffin-restoration',
-    name: 'Intensive Keratin Rejuvenation & Thermal Spa',
+    name: 'Keratin Repair & Warm Paraffin',
     category: 'spa-rituals',
     price: 45,
     durationMinutes: 50,
-    shortDescription: 'Intensive restorative therapy for damaged, weak, brittle nails and severely dry hands.',
-    fullDescription: 'Designed for clients seeking natural nail rehabilitation. Uses the medical-grade IBX fusion system to rebuild broken keratin bonds inside the nail matrix, followed by a warm botanical paraffin thermal infusion for silk-smooth hands.',
-    badge: 'Nail Health',
+    shortDescription:
+      'For nails that peel, split or bend. No colour and no length — just the natural nail.',
+    fullDescription:
+      'IBX is warmed into the nail plate so the peeling layers bind back together, then the hands go into a warm lavender paraffin wrap. Usually taken two or three appointments in a row before going back to colour, and often booked after extensions have been removed.',
+    badge: 'Repair treatment',
     included: [
-      'Gentle waterless cuticle care',
-      'Double-dose IBX thermal deep-penetrating infusion',
-      'Warm lavender essential oil paraffin dip',
-      'Strengthening botanical finish coat'
+      'Waterless cuticle care',
+      'Two IBX layers warmed into the nail',
+      'Warm lavender paraffin wrap',
+      'Strengthening finish coat',
     ],
     recommendedAddons: [],
-    imageUrl: 'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?auto=format&fit=crop&w=800&q=80'
-  }
-];
+  },
+]

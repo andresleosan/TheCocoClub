@@ -1,136 +1,149 @@
-import React, { useEffect } from 'react';
-import confetti from 'canvas-confetti';
-import { CheckCircle2, Calendar, MessageCircle, MapPin, Download, Sparkles, Heart, Clock } from 'lucide-react';
-import { Booking } from '../../types';
-import { formatDuration, formatPrice, formatDateFriendly } from '../../utils/formatters';
-import { generateIcsCalendarFile } from '../../utils/calendar';
-import { createWhatsAppBookingLink } from '../../utils/whatsapp';
-import { STUDIO_INFO } from '../../data/studioInfo';
+import React, { useState } from 'react'
+import { CalendarPlus, MessageCircle, Phone } from 'lucide-react'
+import { Booking } from '../../types'
+import { STUDIO_INFO, STUDIO_ADDRESS_LINE } from '../../data/studioInfo'
+import { formatDateFriendly, formatDuration, formatPrice } from '../../utils/formatters'
+import { generateIcsCalendarFile } from '../../utils/calendar'
+import { createWhatsAppBookingLink } from '../../utils/whatsapp'
+
+/**
+ * Step four — the hand-off. This screen carried the site's most damaging defect.
+ *
+ * It fired confetti, stamped the request CONFIRMED in green, and told the client their
+ * appointment "has been registered with Deoana Moreno". None of that was true: `addBooking()`
+ * writes to the visitor's own localStorage and nothing else, so a client who stopped here —
+ * and the celebration invited them to stop here — was never heard from. WhatsApp was one of
+ * two equal-weight buttons, labelled "Notify on WhatsApp", as though the studio already knew.
+ *
+ * So the screen now says the only true thing: nothing has reached the studio yet, and sending
+ * the message is what sends the request. The confetti is gone with it — there is nothing to
+ * celebrate until Deoana replies. The reference number and the .ics are deliberately quiet;
+ * the calendar file is written as a tentative event for the same reason.
+ */
 
 interface StepConfirmationProps {
-  booking: Booking;
-  onClose: () => void;
+  booking: Booking
+  onClose: () => void
 }
 
+const SummaryRow: React.FC<{ label: string; children: React.ReactNode }> = ({ label, children }) => (
+  <div>
+    <dt className="u-eyebrow text-khaki-700">{label}</dt>
+    <dd className="mt-1 text-sm text-jacobean">{children}</dd>
+  </div>
+)
+
 export const StepConfirmation: React.FC<StepConfirmationProps> = ({ booking, onClose }) => {
-  useEffect(() => {
-    // Fire confetti cannon for delightful confirmation
-    confetti({
-      particleCount: 80,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#737F51', '#8C3B2B', '#C5A059', '#D7CEBE', '#2C1810']
-    });
-  }, []);
+  // Following the link leaves the page, so the follow-up note is guidance for the client who
+  // comes back — including the one whose device has no WhatsApp and needs the phone number.
+  const [handedOff, setHandedOff] = useState(false)
 
   return (
-    <div className="space-y-6 text-center">
-      
-      {/* Success Icon */}
-      <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto shadow-inner">
-        <CheckCircle2 className="w-10 h-10 stroke-[2.5]" />
-      </div>
+    <div className="space-y-6 px-6 py-6 sm:px-8">
+      <section className="rounded-panel bg-jacobean-900 px-5 py-6 text-lace sm:px-6">
+        <h3 className="u-title text-xl leading-tight sm:text-2xl">Send it to the studio</h3>
 
-      <div className="space-y-2">
-        <span className="text-xs font-bold uppercase tracking-[0.2em] text-khaki-700">
-          Private Appointment Confirmed
-        </span>
-        <h3 className="font-serif text-3xl font-bold text-jacobean">
-          We Look Forward to Welcoming You
-        </h3>
-        <p className="text-xs sm:text-sm text-jacobean/70 max-w-md mx-auto">
-          Your booking has been registered with Deoana Moreno at <strong>14 La Motte Street</strong>.
+        <p className="mt-2 text-sm leading-relaxed text-oyster-300">
+          Nothing has reached Deoana yet. Your request arrives when you send this WhatsApp
+          message — she reads it herself and replies to confirm the time.
         </p>
-      </div>
 
-      {/* Booking Summary Receipt Card */}
-      <div className="bg-white rounded-2xl p-5 border border-oyster-200 shadow-sm text-left space-y-4 max-w-md mx-auto">
-        
-        {/* Reference & Service */}
-        <div className="flex items-center justify-between border-b border-oyster-100 pb-3">
+        <a
+          href={createWhatsAppBookingLink(booking)}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => setHandedOff(true)}
+          className="u-btn-inverse mt-5 w-full"
+        >
+          <MessageCircle className="h-4 w-4" aria-hidden="true" />
+          Send my request on WhatsApp
+        </a>
+
+        {handedOff && (
+          <p className="mt-4 flex items-start gap-2 border-t border-lace/15 pt-4 text-sm text-oyster-300">
+            <Phone className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+            <span>
+              If WhatsApp did not open, ring the studio on{' '}
+              <a
+                href={`tel:${STUDIO_INFO.phone.replace(/\s/g, '')}`}
+                className="font-semibold text-lace underline decoration-oyster-400 underline-offset-4"
+              >
+                {STUDIO_INFO.phoneDisplay}
+              </a>{' '}
+              and quote your reference.
+            </span>
+          </p>
+        )}
+      </section>
+
+      <section className="u-card p-5">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-oyster-300/70 pb-4">
           <div>
-            <p className="text-[10px] text-jacobean/50 font-bold uppercase tracking-wider">
-              Booking Reference
-            </p>
-            <p className="font-mono text-sm font-bold text-redRobin">
-              #{booking.referenceNumber}
+            <p className="u-eyebrow text-khaki-700">Reference</p>
+            <p className="mt-1 font-mono text-sm font-semibold text-jacobean">
+              {booking.referenceNumber}
             </p>
           </div>
-          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
-            Confirmed
+          <span className="rounded-full border border-khaki-500 px-3 py-1 text-xs font-semibold text-khaki-700">
+            Awaiting confirmation
           </span>
         </div>
 
-        {/* Treatment Info */}
-        <div className="space-y-1">
-          <p className="text-[10px] text-jacobean/50 font-bold uppercase tracking-wider">
-            Treatment & Add-ons
-          </p>
-          <p className="font-serif text-base font-bold text-jacobean">
-            {booking.serviceName}
-          </p>
-          {booking.addOns.length > 0 && (
-            <p className="text-xs text-khaki-700">
-              + {booking.addOns.map(a => a.name).join(', ')}
-            </p>
+        <dl className="grid grid-cols-1 gap-4 pt-4 sm:grid-cols-2">
+          <div className="sm:col-span-2">
+            <dt className="u-eyebrow text-khaki-700">Treatment</dt>
+            <dd className="mt-1 text-sm text-jacobean">
+              {booking.serviceName}
+              {booking.addOns.length > 0 && (
+                <span className="mt-1 block text-sm text-jacobean/70">
+                  with {booking.addOns.map((addon) => addon.name).join(', ')}
+                </span>
+              )}
+            </dd>
+          </div>
+
+          <SummaryRow label="Day and time">
+            {/* Printed as a raw ISO string here before — "2026-09-12 at 15:00". */}
+            {formatDateFriendly(booking.date)}
+            <span className="mt-1 block text-sm text-jacobean/70">
+              {booking.timeSlot} · about {formatDuration(booking.totalDurationMinutes)}
+            </span>
+          </SummaryRow>
+
+          <SummaryRow label="Studio price">
+            {formatPrice(booking.totalPrice)}
+            <span className="mt-1 block text-sm text-jacobean/70">
+              Payable at the studio. Deoana confirms the figure with the time.
+            </span>
+          </SummaryRow>
+
+          {booking.beveragePreference && (
+            <SummaryRow label="To drink">{booking.beveragePreference}</SummaryRow>
           )}
-        </div>
 
-        {/* Date, Time & Location */}
-        <div className="grid grid-cols-2 gap-3 pt-2 border-t border-oyster-100 text-xs text-jacobean/80">
-          <div>
-            <p className="text-[10px] text-jacobean/50 uppercase font-semibold">Date & Time</p>
-            <p className="font-bold text-jacobean">{booking.date} at {booking.timeSlot}</p>
-            <p className="text-[11px] text-jacobean/60">{formatDuration(booking.totalDurationMinutes)}</p>
-          </div>
-          <div>
-            <p className="text-[10px] text-jacobean/50 uppercase font-semibold">Total to Pay</p>
-            <p className="font-serif text-lg font-bold text-redRobin">{formatPrice(booking.totalPrice)}</p>
-            <p className="text-[11px] text-jacobean/60">Pay at studio (Cash/Card)</p>
-          </div>
-        </div>
+          <SummaryRow label="Where">{STUDIO_ADDRESS_LINE}</SummaryRow>
+        </dl>
+      </section>
 
-        {/* Welcome drink note if selected */}
-        {booking.beveragePreference && (
-          <div className="pt-2 border-t border-oyster-100 text-xs text-jacobean/70">
-            <span className="font-semibold text-jacobean">Welcome Refreshment:</span> {booking.beveragePreference}
-          </div>
-        )}
-
-      </div>
-
-      {/* Next Actions */}
-      <div className="space-y-3 max-w-md mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          {/* WhatsApp Direct Dispatch */}
-          <a
-            href={createWhatsAppBookingLink(booking)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold shadow-xs transition-colors"
-          >
-            <MessageCircle className="w-4 h-4" />
-            <span>Notify on WhatsApp</span>
-          </a>
-
-          {/* Add to Calendar Button */}
-          <button
-            onClick={() => generateIcsCalendarFile(booking)}
-            className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-jacobean hover:bg-jacobean-800 text-lace text-xs font-semibold shadow-xs transition-colors"
-          >
-            <Download className="w-4 h-4 text-gold-400" />
-            <span>Add to Calendar (.ics)</span>
-          </button>
-        </div>
-
-        <button
-          onClick={onClose}
-          className="w-full py-2.5 text-center text-xs font-semibold text-jacobean/70 hover:text-jacobean transition-colors"
-        >
-          Return to The Coco Club Homepage
+      <div className="space-y-2">
+        <button type="button" onClick={() => generateIcsCalendarFile(booking)} className="u-btn-secondary">
+          <CalendarPlus className="h-4 w-4" aria-hidden="true" />
+          Save to my calendar
         </button>
+        <p className="text-sm text-jacobean/70">
+          Saved as a tentative event, since the time is not settled until the studio replies.
+        </p>
       </div>
 
+      {/* The modal footer carries Close as well; this one is here for anyone reading straight
+          down the panel on a phone. */}
+      <button
+        type="button"
+        onClick={onClose}
+        className="text-sm font-medium text-jacobean/70 underline decoration-oyster-400 underline-offset-4 transition-colors hover:text-redRobin"
+      >
+        Back to the site
+      </button>
     </div>
-  );
-};
+  )
+}

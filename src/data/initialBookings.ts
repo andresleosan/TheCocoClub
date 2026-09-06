@@ -1,89 +1,129 @@
-import { Booking } from '../types';
-import { SERVICE_ADDONS } from './services';
+import { Booking, BookingStatus, ServiceAddOn } from '../types'
+import { SERVICES_DATA, SERVICE_ADDONS } from './services'
+import { STUDIO_INFO } from './studioInfo'
 
-// Generate dynamic dates near current date for realistic demonstration
-const today = new Date();
-const formatDate = (daysOffset: number) => {
-  const d = new Date(today);
-  d.setDate(d.getDate() + daysOffset);
-  return d.toISOString().split('T')[0];
-};
+/**
+ * DEMO DATA. None of these people exist.
+ *
+ * The admin portal has no backend to read from, so it seeds itself with these rows the first
+ * time it opens in a given browser. They exist so the portal has something to lay out — they
+ * are not the studio's diary and they never leave the visitor's own localStorage.
+ *
+ * They are written to be obviously fake: "Demo client A", example.com addresses, and numbers
+ * from the +44 7700 900xxx range that Ofcom reserves for fiction. The old file used
+ * full names, a gmail.com address and a je domain, which read as real client records sitting
+ * in a public repository.
+ */
 
-export const INITIAL_BOOKINGS: Booking[] = [
+/** Dates are relative so the portal always opens on a plausible week, whenever it is run. */
+const dateOffset = (days: number): string => {
+  const d = new Date()
+  d.setDate(d.getDate() + days)
+  const month = `${d.getMonth() + 1}`.padStart(2, '0')
+  const day = `${d.getDate()}`.padStart(2, '0')
+  return `${d.getFullYear()}-${month}-${day}`
+}
+
+const daysAgoIso = (days: number): string =>
+  new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
+
+interface DemoRow {
+  id: string
+  reference: string
+  clientName: string
+  serviceId: string
+  addOnIds: string[]
+  /** Offset in days from today; negative is in the past. */
+  dayOffset: number
+  createdDaysAgo: number
+  /** Must be one of STUDIO_INFO.availableTimeSlots — the old rows used 14:00 and 15:30, which
+      the booker never offers, so the demo diary showed times nobody could actually request. */
+  timeSlot: string
+  beverage: string
+  notes: string
+  status: BookingStatus
+  isPaid: boolean
+}
+
+const DEMO_ROWS: DemoRow[] = [
   {
-    id: 'bk-101',
-    referenceNumber: 'CC-2026-9142',
-    createdAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-    clientName: 'Eleanor Vance',
-    clientEmail: 'eleanor.vance@jerseymail.co.uk',
-    clientPhone: '+44 7700 900123',
+    id: 'demo-a',
+    reference: 'CC-DEMO-01',
+    clientName: 'Demo client A',
     serviceId: 'srv-biab-signature',
-    serviceName: 'The Coco Club Signature BIAB Overlay',
-    addOns: [SERVICE_ADDONS[3]], // French micro tips
-    date: formatDate(0), // Today
+    addOnIds: ['addon-french'],
+    dayOffset: 0,
+    createdDaysAgo: 2,
     timeSlot: '10:30',
-    totalPrice: 67,
-    totalDurationMinutes: 90,
-    beveragePreference: 'Artisan Italian Espresso / Cappuccino',
-    notes: 'Regular client. Prefers square round shape and nude milky base.',
+    beverage: STUDIO_INFO.beverageOptions[0],
+    notes: 'Square-round shape, milky nude base.',
     status: 'confirmed',
-    isPaid: true
+    isPaid: true,
   },
   {
-    id: 'bk-102',
-    referenceNumber: 'CC-2026-9143',
-    createdAt: new Date(Date.now() - 86400000).toISOString(),
-    clientName: 'Victoria Cabot',
-    clientEmail: 'v.cabot@sthelier.je',
-    clientPhone: '+44 7797 811442',
+    id: 'demo-b',
+    reference: 'CC-DEMO-02',
+    clientName: 'Demo client B',
     serviceId: 'srv-medical-podology',
-    serviceName: 'Specialist Clinical Podological Pedicure',
-    addOns: [SERVICE_ADDONS[0]], // Paraffin
-    date: formatDate(0), // Today
-    timeSlot: '14:00',
-    totalPrice: 77,
-    totalDurationMinutes: 90,
-    beveragePreference: 'Organic Chamomile & Lavender Infusion',
-    notes: 'Needs deep heel callus treatment and nail contouring.',
-    status: 'confirmed',
-    isPaid: false
-  },
-  {
-    id: 'bk-103',
-    referenceNumber: 'CC-2026-9144',
-    createdAt: new Date(Date.now() - 86400000 * 3).toISOString(),
-    clientName: 'Hannah Marett',
-    clientEmail: 'hannah.marett@gmail.com',
-    clientPhone: '+44 7797 654321',
-    serviceId: 'srv-acrylic-fullset',
-    serviceName: 'Bespoke Sculpted Acrylic Extensions (Full Set)',
-    addOns: [SERVICE_ADDONS[2]], // Chrome
-    date: formatDate(1), // Tomorrow
-    timeSlot: '12:00',
-    totalPrice: 85,
-    totalDurationMinutes: 115,
-    beveragePreference: 'Complimentary Glass of Chilled Prosecco',
-    notes: 'Almond shape, chrome pearl finish for a wedding guest look.',
-    status: 'confirmed',
-    isPaid: true
-  },
-  {
-    id: 'bk-104',
-    referenceNumber: 'CC-2026-9145',
-    createdAt: new Date(Date.now() - 86400000 * 5).toISOString(),
-    clientName: 'Chloe Du Feu',
-    clientEmail: 'chloe.dufeu@outlook.com',
-    clientPhone: '+44 7700 900888',
-    serviceId: 'srv-ombre-babyboomer',
-    serviceName: 'French Ombré / Babyboomer Luxury Set',
-    addOns: [],
-    date: formatDate(2),
-    timeSlot: '15:30',
-    totalPrice: 85,
-    totalDurationMinutes: 120,
-    beveragePreference: 'Chilled Sparkling Water with Fresh Lime',
-    notes: 'First time client from St Brelade.',
+    addOnIds: ['addon-paraffin'],
+    dayOffset: 1,
+    createdDaysAgo: 1,
+    timeSlot: '13:30',
+    beverage: STUDIO_INFO.beverageOptions[1],
+    notes: 'Asked about heel hard skin. Awaiting a reply on WhatsApp.',
     status: 'pending',
-    isPaid: false
+    isPaid: false,
+  },
+  {
+    id: 'demo-c',
+    reference: 'CC-DEMO-03',
+    clientName: 'Demo client C',
+    serviceId: 'srv-acrylic-fullset',
+    addOnIds: ['addon-chrome'],
+    dayOffset: -4,
+    createdDaysAgo: 9,
+    timeSlot: '15:00',
+    beverage: STUDIO_INFO.beverageOptions[3],
+    notes: 'Almond, pearl chrome. Rebook an infill in three weeks.',
+    status: 'completed',
+    isPaid: true,
+  },
+]
+
+/**
+ * Totals are derived rather than typed out, and add-ons are looked up by id rather than by
+ * position. The old file wrote `SERVICE_ADDONS[3]` and a hardcoded `totalPrice: 67`, both of
+ * which quietly become wrong the moment the menu is reordered or a price changes.
+ */
+const buildDemoBooking = (row: DemoRow): Booking => {
+  const service = SERVICES_DATA.find((s) => s.id === row.serviceId)
+  const addOns: ServiceAddOn[] = SERVICE_ADDONS.filter((addOn) => row.addOnIds.includes(addOn.id))
+
+  const basePrice = service?.price ?? 0
+  const baseMinutes = service?.durationMinutes ?? 0
+
+  return {
+    id: row.id,
+    referenceNumber: row.reference,
+    createdAt: daysAgoIso(row.createdDaysAgo),
+    clientName: row.clientName,
+    clientEmail: `${row.id}@example.com`,
+    clientPhone: '+44 7700 900000',
+    serviceId: row.serviceId,
+    serviceName: service?.name ?? 'Treatment no longer on the menu',
+    addOns,
+    date: dateOffset(row.dayOffset),
+    timeSlot: row.timeSlot,
+    totalPrice: addOns.reduce((total, addOn) => total + addOn.price, basePrice),
+    totalDurationMinutes: addOns.reduce(
+      (total, addOn) => total + addOn.durationMinutes,
+      baseMinutes,
+    ),
+    beveragePreference: row.beverage,
+    notes: row.notes,
+    status: row.status,
+    isPaid: row.isPaid,
   }
-];
+}
+
+export const INITIAL_BOOKINGS: Booking[] = DEMO_ROWS.map(buildDemoBooking)
