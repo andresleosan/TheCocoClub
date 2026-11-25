@@ -17,12 +17,14 @@ import { Logomark } from '../brand/BrandMarks'
  * leaned over the counter could open that list from a link in the footer. A passcode stops that,
  * which is the threat that exists here.
  *
- * Set `VITE_STUDIO_PASSCODE` at build time to change it. Real protection — an account, a
+ * Set `VITE_STUDIO_PASSCODE` at build time (Cloudflare Pages: Settings > Variables and Secrets,
+ * then redeploy). There is deliberately no default: a build without it keeps the diary locked
+ * for everyone rather than opening it with a passcode written in the source. Real protection — an account, a
  * session, data that is not readable on the device — needs a backend, and that is written down
  * as an open item in the README rather than pretended away here.
  */
 
-const PASSCODE = import.meta.env.VITE_STUDIO_PASSCODE || 'lamotte'
+const PASSCODE = (import.meta.env.VITE_STUDIO_PASSCODE ?? '').trim().toLowerCase()
 
 /** Session, not local: closing the browser re-locks the diary on a shared or borrowed device. */
 const UNLOCK_KEY = 'the_coco_club_portal_unlocked'
@@ -75,7 +77,8 @@ export const StudioLock: React.FC<StudioLockProps> = ({ isOpen, onClose, onUnloc
 
   const submit = (event: React.FormEvent) => {
     event.preventDefault()
-    if (value.trim().toLowerCase() === PASSCODE.toLowerCase()) {
+    // An empty passcode never matches, so a build without the variable fails closed.
+    if (PASSCODE !== '' && value.trim().toLowerCase() === PASSCODE) {
       onUnlock()
       return
     }
