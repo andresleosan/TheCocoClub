@@ -129,9 +129,9 @@ These need a decision from the business and have deliberately **not** been inven
 
 - **Cancellation policy.** No notice period, deposit or no-show rule has been set. See
   `needsOwnerInput` in [`src/data/policies.ts`](src/data/policies.ts).
-- **Production domain.** `index.html` currently points `canonical`, `og:url` and the JSON-LD at
-  `thecococlub.vercel.app`. The business trades as `.je` — whichever URL ships is the one Google
-  indexes and WhatsApp previews.
+- **Production domain.** The site is hosted on Cloudflare Pages, and `index.html` points
+  `canonical`, `og:url` and the JSON-LD at `thecococlub-je.pages.dev`. The business trades as `.je` —
+  whichever URL ships is the one Google indexes and WhatsApp previews.
 - **Studio portal access.** The portal is client-side only. Its passcode gate keeps the panel out
   of casual sight; it is not authentication, and the booking data it shows lives unencrypted in
   the browser. Real protection needs a backend.
